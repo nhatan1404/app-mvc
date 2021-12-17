@@ -9,7 +9,7 @@ $app = new Application();
 
 //  =========================== Admin ===========================
 
-// Home DashboardController
+// Home Dashboard
 $app->router->get('/admin', 'DashboardController@index');
 
 // Product 
@@ -47,7 +47,13 @@ $app->router->get('/admin/user/:id/edit', 'UserController@edit');
 $app->router->post('/admin/user/store', 'UserController@store');
 $app->router->post('/admin/user/:id/update', 'UserController@update');
 $app->router->post('/admin/user/:id/delete', 'UserController@destroy');
+$app->router->post('/admin/user/:id/change-password', 'UserController@updatePassword');
 
+// Order
+$app->router->get('/admin/order', 'OrderController@index');
+$app->router->get('/admin/order/:id', 'OrderController@show');
+$app->router->get('/admin/order/:id/edit', 'OrderController@edit');
+$app->router->post('/admin/order/:id/update', 'OrderController@update');
 //  =========================== Admin ===========================
 
 //  =========================== Site  ===========================
@@ -61,6 +67,7 @@ $app->router->get('/login', 'AuthController@login');
 $app->router->get('/register', 'AuthController@register');
 $app->router->post('/login', 'AuthController@handleLogin');
 $app->router->post('/register', 'AuthController@handleRegister');
+$app->router->get('/register-success', 'AuthController@registerSuccess');
 $app->router->post('/logout', 'AuthController@handleLogout');
 $app->router->get('/profile', 'HomeController@profile');
 $app->router->get('/cart', 'HomeController@cart');

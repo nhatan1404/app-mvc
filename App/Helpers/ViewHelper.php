@@ -20,12 +20,12 @@ class ViewHelper
     $this->session = new Session();
   }
 
-  public function getListParentCategory()
+  public function getListParentCategory(): array
   {
     return $this->modelCategory->getListParentCategory();
   }
 
-  public function getListAllCategory()
+  public function getListAllCategory(): array
   {
     return $this->modelCategory->getAll();
   }
@@ -51,17 +51,17 @@ class ViewHelper
     return $this->modelAddress->getListWards($districtId);
   }
 
-  public function getRelatedProduct(int $limit)
+  public function getRelatedProduct(int $limit): array
   {
     return $this->modelProduct->getListRelated($limit);
   }
 
-  public function getLastestProduct(int $limit)
+  public function getLastestProduct(int $limit): array
   {
     return $this->modelProduct->getListLastest($limit);
   }
 
-  public function getLastestDiscountProduct(int $limit)
+  public function getLastestDiscountProduct(int $limit): array
   {
     return $this->modelProduct->getListLastestDiscount($limit);
   }
@@ -78,12 +78,14 @@ class ViewHelper
 
   public function createSlug(string $name, int $id, string $slug): string
   {
-    return APP_URL . '/' . $name . '/' . $slug . '.' . $id;
+    $slug = '/' . $name . '/' . $slug . '.' . $id;
+    return APP_URL . str_replace('//', '/', $slug);
   }
 
   public function createUrl(string $path  = '')
   {
-    return APP_URL . '/' . $path;
+    $url = '/' . $path;
+    return APP_URL . str_replace('//', '/', $url);
   }
 
   public function createUrlImg(string $url): string

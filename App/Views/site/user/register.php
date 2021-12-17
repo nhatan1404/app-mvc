@@ -1,9 +1,16 @@
 <div class="container-xl px-4">
+  <?php if ($this->issetFlash('error')) { ?>
+    <div class="row">
+      <div class="col-md-10 mx-auto">
+        <?php $this->flashMsg('error') ?>
+      </div>
+    </div>
+  <?php }  ?>
   <div class="row justify-content-center">
-    <div class="col-lg-7">
+    <div class="col-lg-10">
       <!-- Basic registration form-->
       <div class="card shadow-lg border-0 rounded-lg mt-5 mb-5">
-        <div class="card-header cart-empty justify-content-center">
+        <div class="card-header bg-green text-white justify-content-center">
           <h3 class="fw-light mb-0" style="text-transform: uppercase;">Đăng Ký</h3>
         </div>
         <div class="card-body">
@@ -15,6 +22,7 @@
                 <div class="mb-3">
                   <label class="small mb-1" for="inputLastName">Họ: </label>
                   <input class="form-control " id="inputLastName" name="lastname" type="text" placeholder="Nhập họ" value="" required autocomplete="lastname" autofocus />
+                  <?php $this->displayError('lastname') ?>
                 </div>
               </div>
               <div class="col-md-6">
@@ -22,6 +30,7 @@
                 <div class="mb-3">
                   <label class="small mb-1" for="inputFirstName">Tên: </label>
                   <input class="form-control " id="inputFirstName" name="firstname" type="text" placeholder="Nhập tên" value="" required autocomplete="firstname" autofocus />
+                  <?php $this->displayError('firstname') ?>
                 </div>
               </div>
             </div>
@@ -31,12 +40,14 @@
                 <div class="mb-3">
                   <label class="small mb-1" for="inputEmailAddress">Email: </label>
                   <input class="form-control " id="inputEmailAddress" name="email" type="email" aria-describedby="emailHelp" placeholder="Nhập email" value="" required autocomplete="email" autofocus />
+                  <?php $this->displayError('email') ?>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="mb-3">
                   <label class="small mb-1" for="inputTelephone">Số Điện Thoại: </label>
                   <input class="form-control " id="inputTelephone" name="telephone" type="text" placeholder="Nhập số điện thoại" value="" required autocomplete="email" autofocus />
+                  <?php $this->displayError('telephone') ?>
                 </div>
               </div>
             </div>
@@ -47,13 +58,15 @@
                 <div class="mb-3">
                   <label class="small mb-1" for="inputPassword">Mật Khẩu: </label>
                   <input class="form-control " id="inputPassword" type="password" name="password" placeholder="Nhập mật khẩu" required autocomplete="new-password" />
+                  <?php $this->displayError('password') ?>
                 </div>
               </div>
               <div class="col-md-6">
                 <!-- Form Group (confirm password)-->
                 <div class="mb-3">
                   <label class="small mb-1" for="inputConfirmPassword">Mật Khẩu:</label>
-                  <input class="form-control" id="inputConfirmPassword" type="password" name="password_confirmation" placeholder="Nhập lại mật khẩu" required autocomplete="new-password" />
+                  <input class="form-control" id="inputConfirmPassword" type="password" name="repassword" placeholder="Nhập lại mật khẩu" required autocomplete="new-password" />
+                  <?php $this->displayError('repassword') ?>
                 </div>
               </div>
             </div>
@@ -64,6 +77,7 @@
                 <div class="mb-3">
                   <label class="small mb-1" for="inputAddress">Địa Chỉ: </label>
                   <input class="form-control " id="inputAddress" type="text" name="address" placeholder="Nhập địa chỉ" required />
+                  <?php $this->displayError('address') ?>
                 </div>
               </div>
               <div class="col-md-6">
@@ -77,6 +91,7 @@
                     <?php
                     } ?>
                   </select>
+                  <?php $this->displayError('province') ?>
                 </div>
               </div>
             </div>
@@ -88,6 +103,7 @@
                   <select name="district" id="district" class="mb-3 w-100" required>
                     <option value="">Chọn thành phố/quận</option>
                   </select>
+                  <?php $this->displayError('district') ?>
                 </div>
               </div>
               <div class="col-md-6">
@@ -96,6 +112,7 @@
                   <select name="ward" id="ward" class="mb-3 w-100" required>
                     <option value="">Chọn phường xã</option>
                   </select>
+                  <?php $this->displayError('ward') ?>
                 </div>
               </div>
             </div>

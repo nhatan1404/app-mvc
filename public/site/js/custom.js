@@ -1,4 +1,5 @@
-$(function () {
+(function ($) {
+  // Load product
   var pageNumber = 2;
   $('#see-more').click(function () {
     const url = __apiURL;
@@ -25,7 +26,7 @@ $(function () {
       },
     });
   });
-});
+})(jQuery);
 
 const notyf = new Notyf({
   position: {
@@ -42,9 +43,10 @@ const notyf = new Notyf({
 });
 
 const formatCurrency = (price) =>
-  new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(
-    price,
-  );
+  new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+  }).format(price);
 
 function addCart(id) {
   const cart_count = $('.cart_count');
@@ -85,8 +87,8 @@ function addCart(id) {
       }
     },
     error: function (error) {
-      if (error.status === 401) {
-        window.location.href = '/login';
+      if (error.status && error.status === 401) {
+        window.location.href = `${__apiURL}login`;
         return;
       }
       notyf.open({
@@ -143,7 +145,10 @@ function updateCart(event, id, value = null) {
         });
       },
       error: function (error) {
-        console.log(error);
+        if (error.status && error.status === 401) {
+          window.location.href = `${__apiURL}login`;
+          return;
+        }
         const { type } = error.responseJSON;
         const message =
           type && type == 'quantity'
@@ -202,7 +207,10 @@ function removeCart(id) {
       }
     },
     error: function (error) {
-      console.log(error);
+      if (error.status && error.status === 401) {
+        window.location.href = `${__apiURL}login`;
+        return;
+      }
       notyf.open({
         type: 'error',
         message: 'Có lỗi xảy ra!',

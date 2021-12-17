@@ -63,7 +63,7 @@ class UserController extends Controller
     $this->validator->name('repassword')->value($repassword)->label('Mật khẩu xác nhận')->string()->equal($password)->required();
     $this->validator->name('email')->value($email)->label('Email')->string()->email()->required();
     $this->validator->name('telephone')->value($telephone)->label('Số điện thoại')->string()->phone()->required();
-    $this->validator->name('avatar')->file($avatar)->label('Ảnh đại diện')->required();
+    // $this->validator->name('avatar')->file($avatar)->label('Ảnh đại diện')->required();
     $this->validator->name('role')->value($role)->label('Chức vụ')->string()->required();
     $this->validator->name('status')->value($status)->label('Trạng thái')->string()->required();
     $this->validator->name('address')->value($address)->label('Địa chỉ')->string()->required();
@@ -76,12 +76,21 @@ class UserController extends Controller
       $this->view->redirect('/admin/user/create');
     }
 
+    if ($avatar == null) {
+      $avatar = DEFAULT_IMAGE_AVATAR;
+    } else {
+      $avatar = $this->body->upload('avatar');
+    }
+    $password = password_hash($password, PASSWORD_DEFAULT);
     $address_id = $this->modelAddress->save([$address, $province, $district, $ward]);
-    // $rowCount = $this->modelUser->save([$firstname, $lastname, $password, $avatar, $address_id, $email, $telephone, $role, $status]);
+    $rowCount = $this->modelUser->save([$firstname, $lastname, $password, $avatar, $address_id, $email, $telephone, $role, $status]);
 
-    if (1 > 0) {
+    if ($rowCount > 0) {
       $this->view->createFlashMsg('success', 'Tạo tài khoản thành công', FlashMessage::FLASH_SUCCESS);
     } else {
+      if (!$this->body->isEmptyFile('avatar')) {
+        unlink($avatar);
+      }
       $this->view->createFlashMsg('error', 'Tạo tài khoản không thành công',  FlashMessage::FLASH_ERROR);
     }
     $this->view->redirect('/admin/user');
@@ -107,25 +116,64 @@ class UserController extends Controller
       return;
     }
     $this->view->user = $user;
+    $this->view->title = 'Sửa Tài Khoản';
     $this->view->render('admin.user.edit');
   }
 
   public function update($id)
   {
-    $code = $this->body->post('code');
-    $type = $this->body->post('type');
-    $value = $this->body->post('value');
+    $user = $this->modelUser->findById($id);
+    if ($user == null) {
+      $this->view->notFound('Tài khoản không tồn tại');
+      return;
+    }
+
+    $firstname = $this->body->post('firstname');
+    $lastname = $this->body->post('lastname');
+    $email = $this->body->post('email');
+    $telephone = $this->body->post('telephone');
+    $avatar = $this->body->file('avatar');
+    $role = $this->body->post('role');
     $status = $this->body->post('status');
-    $rowCount = $this->modelUser->update([$code, $type, $value, $status, $id]);
+    $address = $this->body->post('address');
+    $province = $this->body->post('province');
+    $district = $this->body->post('district');
+    $ward = $this->body->post('ward');
+
+    $this->validator->name('firstname')->value($firstname)->label('Tên')->string()->required();
+    $this->validator->name('lastname')->value($lastname)->label('Họ')->string()->required();
+    $this->validator->name('email')->value($email)->label('Email')->string()->email()->required();
+    $this->validator->name('telephone')->value($telephone)->label('Số điện thoại')->string()->phone()->required();
+    //$this->validator->name('avatar')->file($avatar)->label('Ảnh đại diện')->required();
+    $this->validator->name('role')->value($role)->label('Chức vụ')->string()->required();
+    $this->validator->name('status')->value($status)->label('Trạng thái')->string()->required();
+    $this->validator->name('address')->value($address)->label('Địa chỉ')->string()->required();
+    $this->validator->name('province')->value($province)->label('Tỉnh')->string()->required();
+    $this->validator->name('district')->value($district)->label('Thành phố/quận')->string()->required();
+    $this->validator->name('ward')->value($ward)->label('Phường/xã')->string()->required();
 
     if (!$this->validator->isValid()) {
       $this->session->set($this->view->validation(), $this->validator->getErrors());
       $this->view->redirect('/admin/user/' . $id . '/edit');
     }
+    if ($avatar == null) {
+      $avatar =  $user->avatar;
+    } else {
+      $avatar = $this->body->upload('avatar');
+    }
 
-    if ($rowCount > 0) {
+    $rowCountUser = $this->modelUser->update([$firstname, $lastname, $avatar, $email, $telephone, $role, $status, $id]);
+    $rowCountAddress = $this->modelAddress->update([$address, $province, $district, $ward, (int)$user->address_id]);
+
+    if ($rowCountUser > 0 || $rowCountAddress > 0) {
+      if ($this->view->isLocalImage($user->avatar) && file_exists($user->avatar)) {
+        unlink($user->avatar);
+      }
       $this->view->createFlashMsg('success', 'Cập nhật tài khoản thành công', FlashMessage::FLASH_SUCCESS);
-    } else if ($rowCount == -1) {
+    } else if ($rowCountUser == -1 || $rowCountAddress == -1) {
+      if ($rowCountUser == -1 && !$this->body->isEmptyFile('avatar')) {
+        unlink($avatar);
+      }
       $this->view->createFlashMsg('error', 'Cập nhật tài khoản không thành công',  FlashMessage::FLASH_ERROR);
     }
     $this->view->redirect('/admin/user');
@@ -133,12 +181,48 @@ class UserController extends Controller
 
   public function destroy($id)
   {
+    $user = $this->modelUser->findById($id);
+    if ($user == null) {
+      $this->view->notFound('Tài khoản không tồn tại');
+      return;
+    }
     $isDeleted = $this->modelUser->remove($id) > 0;
     if ($isDeleted) {
+      if ($this->view->isLocalImage($user->avatar) && file_exists($user->avatar)) {
+        unlink($user->avatar);
+      }
       $this->view->createFlashMsg('success', 'Xoá tài khoản thành công', FlashMessage::FLASH_SUCCESS);
     } else {
       $this->view->createFlashMsg('error', 'Xoá tài khoản không thành công', FlashMessage::FLASH_ERROR);
     }
     $this->view->redirect('/admin/user');
+  }
+
+  public function updatePassword($id)
+  {
+    $user = $this->modelUser->findById($id);
+    if ($user == null) {
+      $this->view->notFound('Tài khoản không tồn tại');
+      return;
+    }
+    $password = $this->body->post('password-modal');
+    $repassword = $this->body->post('repassword-modal');
+    $this->validator->name('password')->value($password)->label('Mật khẩu')->string()->equal($repassword)->required();
+    $this->validator->name('repassword')->value($repassword)->label('Mật khẩu xác nhận')->string()->equal($password)->required();
+    if (!$this->validator->isValid()) {
+      $this->view->createFlashMsg('error', 'Mật khẩu không khớp', FlashMessage::FLASH_ERROR);
+      $this->view->redirect('/admin/user/' . $id . '/edit');
+    }
+
+    $password = password_hash($password, PASSWORD_DEFAULT);
+
+    $rowCount = $this->modelUser->updatePassword([$password, $id]);
+
+    if ($rowCount > 0) {
+      $this->view->createFlashMsg('success', 'Đổi mật khẩu tài khoản thành công', FlashMessage::FLASH_SUCCESS);
+    } else if ($rowCount == -1) {
+      $this->view->createFlashMsg('error', 'Đổi mật khẩu tài khoản không thành công',  FlashMessage::FLASH_ERROR);
+    }
+    $this->view->redirect('/admin/user/' . $id . '/edit');
   }
 }

@@ -69,6 +69,7 @@ class ProductController extends Controller
       $this->session->set($this->view->validation(), $this->validator->getErrors());
       $this->view->redirect('/admin/product/create');
     }
+
     $images = $this->body->upload('images');
 
     $slug = Formatter::slugify($title);
@@ -77,6 +78,7 @@ class ProductController extends Controller
     if ($rowCount > 0) {
       $this->view->createFlashMsg('success', 'Tạo sản phẩm thành công', FlashMessage::FLASH_SUCCESS);
     } else {
+      unlink($images);
       $this->view->createFlashMsg('error', 'Tạo sản phẩm không thành công',  FlashMessage::FLASH_ERROR);
     }
     $this->view->redirect('/admin/product');
@@ -124,7 +126,7 @@ class ProductController extends Controller
     $price = (int) $this->body->post('price');
     $sold = (int) $this->body->post('sold');
     $discount = (int) $this->body->post('discount');
-    $images = ($this->body->isEmptyFile('images')) ? $product->images : $this->body->upload('images');
+    $images = $this->body->file('images');
     $category_id = (int) $this->body->post('category_id');
     $this->validator->name('title')->label('Tên sản phẩm')->value($title)->string()->required();
     $this->validator->name('description')->label('Loại')->value($description)->string()->required();
@@ -132,7 +134,7 @@ class ProductController extends Controller
     $this->validator->name('status')->label('Trạng thái')->value($status)->string()->required();
     $this->validator->name('price')->label('Giá')->value($price)->number()->required();
     $this->validator->name('discount')->label('Chiết khấu')->value($discount)->default(0)->number()->min(0)->max(100)->required();
-    $this->validator->name('images')->label('Ảnh')->file($images)->required();
+    //$this->validator->name('images')->label('Ảnh')->file($images)->required();
     $this->validator->name('category_id')->label('Danh mục')->value($category_id)->number()->required();
 
     if (!$this->validator->isValid()) {
@@ -140,11 +142,25 @@ class ProductController extends Controller
       $this->view->redirect('/admin/product/' . $id . '/edit');
     }
 
+    if ($images == null) {
+      $images = $product->images;
+    } else {
+      $images = $this->body->upload('images');
+    }
+
     $rowCount = $this->modelProduct->update([$title, $description, $quantity, $status, $images, $sold, $price, $discount, $category_id, $product->id]);
 
     if ($rowCount > 0) {
+      if (!$this->body->isEmptyFile('images')) {
+        if ($this->view->isLocalImage($product->images) && file_exists($product->images)) {
+          unlink($product->images);
+        }
+      }
       $this->view->createFlashMsg('success', 'Cập nhật sản phẩm thành công', FlashMessage::FLASH_SUCCESS);
     } else if ($rowCount == -1) {
+      if (!$this->body->isEmptyFile('images')) {
+        unlink($images);
+      }
       $this->view->createFlashMsg('error', 'Cập nhật sản phẩm không thành công',  FlashMessage::FLASH_ERROR);
     }
     $this->view->redirect('/admin/product');

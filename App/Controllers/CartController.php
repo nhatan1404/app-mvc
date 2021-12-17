@@ -12,7 +12,7 @@ class CartController extends Controller
   {
     parent::__construct();
     if (!$this->auth->isLoggedIn()) {
-      http_response_code(403);
+      http_response_code(401);
       die();
     }
     $this->modelCart = new Cart();
@@ -47,7 +47,7 @@ class CartController extends Controller
           $this->view->json(['message' => 'Thêm vào giỏ hàng thành công', 'count' => $cart->count + 1, 'isUpdate' => true], 200);
           return;
         } else {
-          $this->view->json(['message' => 'Có lỗi xảy ra'], 400);
+          $this->view->json(['message' => 'Có lỗi xảy ra 1'], 400);
           return;
         }
       } else {
@@ -60,7 +60,7 @@ class CartController extends Controller
           $this->view->json(['message' => 'Thêm vào giỏ hàng thành công', 'count' => $cart->count + 1, 'isUpdate' => true], 200);
           return;
         } else {
-          $this->view->json(['message' => 'Có lỗi xảy ra'], 400);
+          $this->view->json(['message' => 'Có lỗi xảy ra 2'], 400);
           return;
         }
       }
@@ -80,7 +80,7 @@ class CartController extends Controller
         $this->view->json(['message' => 'Thêm vào giỏ hàng thành công', 'count' => $cart->count, 'isUpdate' => true], 200);
         return;
       } else {
-        $this->view->json(['message' => 'Có lỗi xảy ra'], 400);
+        $this->view->json(['message' => 'Có lỗi xảy ra 3'], 400);
       }
     }
   }

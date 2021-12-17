@@ -3,7 +3,7 @@
     <div class="card">
       <h5 class="card-header">Tạo Tài Khoản</h5>
       <div class="card-body">
-        <form method="post" action="<?php echo $this->helper->createUrl('admin/user/store') ?>">
+        <form method="post" action="<?php echo $this->helper->createUrl('admin/user/store') ?>" enctype='multipart/form-data'>
           <div class="row">
             <div class="col">
               <div class="form-group">

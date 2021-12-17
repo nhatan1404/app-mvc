@@ -24,6 +24,7 @@ define('PATH_IMAGES', 'public/images');
 
 define('DEFAULT_SIZE_LIMIT_UPLOAD', 5000000);
 define('DEFAULT_IMAGE_PRODUCT', 'public/images/default/product.png');
+define('DEFAULT_IMAGE_AVATAR', 'public/images/default/avatar.jpg');
 
 session_start();
 date_default_timezone_set('Asia/Ho_Chi_Minh');

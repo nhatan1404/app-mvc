@@ -35,7 +35,7 @@ class User extends Model
 
   public function findById($id)
   {
-    $query = 'select * from users where id = ?';
+    $query = 'select * from users left join address on users.address_id = address.id where users.id = ?';
     try {
       $data = $this->selectQuery($query, [$id]);
       return count($data) != 0 ? $data[0] : null;
@@ -58,9 +58,19 @@ class User extends Model
 
   public function update(array $user): int
   {
-    $query = 'update users set fistname = ?, lastname = ?, avatar = ?, email = ?, telephone = ? role = ?, status = ? where id = ?';
+    $query = 'update users set firstname = ?, lastname = ?, avatar = ?, email = ?, telephone = ?, role = ?, status = ? where users.id = ?';
     try {
       return $this->updateQuery($query, $user);
+    } catch (PDOException $ex) {
+      return -1;
+    }
+  }
+
+  public function updatePassword(array $data): int
+  {
+    $query = 'update users set password = ? where users.id = ?';
+    try {
+      return $this->updateQuery($query, $data);
     } catch (PDOException $ex) {
       return -1;
     }

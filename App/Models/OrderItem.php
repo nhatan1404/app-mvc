@@ -20,8 +20,8 @@ class OrderItem extends Model
 
   public function getListByOrderId($orderId): array
   {
-    $query = 'select order_details.*, products.title as product_title, products.images as product_images ,products.price as product_price 
-    from order_details left join products on order_details.product_id = products.id where order_id = ?';
+    $query = 'select order_details.*, products.title as product_title, products.images as product_images ,products.price as product_price, categories.title as category
+    from order_details left join products on order_details.product_id = products.id left join categories on categories.id = products.category_id  where order_id = ?';
     try {
       return $this->selectQuery($query, [$orderId]);
     } catch (\PDOException $ex) {

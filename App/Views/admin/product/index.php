@@ -8,7 +8,7 @@
       </div>
     <?php } ?>
     <div class="card-header py-3">
-      <h6 class="mt-2 font-weight-bold text-primary float-left">Danh sách danh mục sản phẩm</h6>
+      <h6 class="mt-2 font-weight-bold text-primary float-left">Danh sách sản phẩm</h6>
       <a href="<?php echo APP_URL . '/admin/product/create' ?>" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Tạo danh mục sản phẩm"><i class="fas fa-plus"></i> Tạo Mới</a>
     </div>
     <div class="card-body">
@@ -41,16 +41,16 @@
                   <td><?php echo $product->title ?></td>
                   <td><?php echo $product->category ?></td>
                   <td><?php echo $product->price ?></td>
-                  <td><?php echo $product->discount ?></td>
+                  <td><?php echo $product->discount ?>%</td>
                   <td><?php echo $product->quantity ?></td>
                   <td><?php echo $product->sold ?></td>
-                  <td><?php echo $product->status ?></td>
+                  <td class='text-center'><?php echo '<span class="badge badge-' . ($product->status == 'active' ? 'primary' : 'danger') . '">' . ($product->status == 'active' ? 'Hiển thị' : 'Ẩn') . '</span>' ?></td>
                   </td>
                   <td>
-                    <a href="<?php echo APP_URL . '/admin/product/' . $product->id ?>" class="btn btn-primary btn-circle btn-sm float-left mr-1 btn-action" data-toggle="tooltip" title="Sửa" data-placement="bottom">
+                    <a href="<?php echo $this->helper->createUrl('admin/product/' . $product->id) ?>" class="btn btn-primary btn-circle btn-sm float-left mr-1 btn-action" data-toggle="tooltip" title="Sửa" data-placement="bottom">
                       <i class="fas fa-info-circle"></i>
                     </a>
-                    <a href="<?php echo APP_URL . '/admin/product/' . $product->id . '/edit' ?>" class="btn btn-warning btn-circle btn-sm float-left mr-1 btn-action" data-toggle="tooltip" title="Sửa" data-placement="bottom">
+                    <a href="<?php echo $this->helper->createUrl('admin/product/' . $product->id . '/edit') ?>" class="btn btn-warning btn-circle btn-sm float-left mr-1 btn-action" data-toggle="tooltip" title="Sửa" data-placement="bottom">
                       <i class="fas fa-edit"></i>
                     </a>
                     <form method="POST" action="<?php echo APP_URL . '/admin/product/' . $product->id . '/delete' ?>">

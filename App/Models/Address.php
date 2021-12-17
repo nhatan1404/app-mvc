@@ -44,7 +44,7 @@ class Address extends Model
 
   public function update(array $data): int
   {
-    $query  = "update address set address_id = ?, province_id = ?, district_id = ?, ward_id = ? where id = ?";
+    $query  = "update address set address = ?, province_id = ?, district_id = ?, ward_id = ? where id = ?";
     try {
       return $this->updateQuery($query, $data);
     } catch (PDOException $ex) {

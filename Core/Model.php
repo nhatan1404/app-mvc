@@ -25,7 +25,7 @@ class Model
   {
     $stm = $this->db->getConnection()->prepare($query);
     $stm->execute($params);
-    return !$isGetLastId ? $stm->rowCount() : $stm->lastInsertId();
+    return !$isGetLastId ? $stm->rowCount() : $this->db->getConnection()->lastInsertId();
   }
 
   protected function createBindParams(array $data): string
