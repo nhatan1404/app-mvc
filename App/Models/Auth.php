@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Core\Model;
-use PDOException;
 
 class Auth extends Model
 {
@@ -13,7 +12,7 @@ class Auth extends Model
     try {
       $data = $this->selectQuery($query, [$email]);
       return count($data) != 0 ? $data[0] : null;
-    } catch (PDOException $ex) {
+    } catch (\PDOException $ex) {
       return null;
     }
   }
@@ -23,7 +22,7 @@ class Auth extends Model
     $query = 'update users set remember_token = ? where id = ?';
     try {
       return $this->updateQuery($query, [$token, $id]);
-    } catch (PDOException $ex) {
+    } catch (\PDOException $ex) {
       return -1;
     }
   }
@@ -33,7 +32,7 @@ class Auth extends Model
     $query = 'select * from users where remember_token = ?';
     try {
       return $this->selectQuery($query, [$token]);
-    } catch (PDOException $ex) {
+    } catch (\PDOException $ex) {
       return null;
     }
   }

@@ -4,7 +4,7 @@ namespace Core;
 
 class Hash
 {
-  public static function uuidv4()
+  public static function uuidv4(): string
   {
     return sprintf(
       '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',

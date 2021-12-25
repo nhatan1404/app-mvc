@@ -9,7 +9,7 @@
     <?php }  ?>
     <div class="card-header py-3">
       <h6 class="mt-2 font-weight-bold text-primary float-left">Danh sách danh mục sản phẩm</h6>
-      <a href="<?php echo APP_URL . '/admin/category/create' ?>" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Tạo danh mục sản phẩm"><i class="fas fa-plus"></i> Tạo Mới</a>
+      <a href="<?php echo $this->helper->createUrl('/admin/category/create') ?>" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Tạo danh mục sản phẩm"><i class="fas fa-plus"></i> Tạo Mới</a>
     </div>
     <div class="card-body">
       <?php if (count($this->categories) > 0) {
@@ -35,13 +35,13 @@
                   <td><?php echo $category->slug ?></td>
                   </td>
                   <td>
-                    <a href="<?php echo APP_URL . '/admin/category/' . $category->id ?>" class="btn btn-primary btn-circle btn-sm float-left mr-1 btn-action" data-toggle="tooltip" title="Sửa" data-placement="bottom">
+                    <a href="<?php echo $this->helper->createUrl('/admin/category/' . $category->id) ?>" class="btn btn-primary btn-circle btn-sm float-left mr-1 btn-action" data-toggle="tooltip" title="Sửa" data-placement="bottom">
                       <i class="fas fa-info-circle"></i>
                     </a>
-                    <a href="<?php echo APP_URL . '/admin/category/' . $category->id . '/edit' ?>" class="btn btn-warning btn-circle btn-sm float-left mr-1 btn-action" data-toggle="tooltip" title="Sửa" data-placement="bottom">
+                    <a href="<?php echo $this->helper->createUrl('/admin/category/' . $category->id . '/edit') ?>" class="btn btn-warning btn-circle btn-sm float-left mr-1 btn-action" data-toggle="tooltip" title="Sửa" data-placement="bottom">
                       <i class="fas fa-edit"></i>
                     </a>
-                    <form method="POST" action="<?php echo APP_URL . '/admin/category/' . $category->id . '/delete' ?>">
+                    <form method="POST" action="<?php echo $this->helper->createUrl('admin/category/' . $category->id . '/delete') ?>">
                       <button class="btn btn-danger btn-circle btn-sm btn-action btnDelete" data-toggle="tooltip" data-placement="bottom" title="Xoá">
                         <i class="fas fa-trash-alt"></i>
                       </button>
@@ -57,13 +57,13 @@
           <span class="float-right">
             <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
               <ul class="pagination">
-                <li class="paginate_button page-item previous <?php echo ($this->currentPage < 2 ? ' disabled' :  '') ?>" id="dataTable_previous"><a href="<?php echo APP_URL . '/admin/category/?page=' . ($this->currentPage > 2 ? $this->currentPage - 1 :  1) ?>" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link"><i class="fas fa-chevron-left"></i></a></li>
+                <li class="paginate_button page-item previous <?php echo ($this->currentPage < 2 ? ' disabled' :  '') ?>" id="dataTable_previous"><a href="<?php echo $this->bindQuery('page', ($this->currentPage > 2 ? $this->currentPage - 1 :  1)) ?>" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link"><i class="fa fa-chevron-left"></i></a></li>
                 <?php for ($i = 1; $i <= $this->totalPage; $i++) {
                 ?>
-                  <li class="paginate_button page-item <?php echo ($this->currentPage == $i ? ' active' : '') ?>"><a href="<?php echo APP_URL . '/admin/category/?page=' . $i ?>" aria-controls="dataTable" data-dt-idx="<?php echo $i ?>" tabindex="0" class="page-link"><?php echo $i ?></a></li>
+                  <li class="paginate_button page-item <?php echo ($this->currentPage == $i ? ' active' : '') ?>"><a href="<?php echo $this->bindQuery('page', $i) ?>" aria-controls="dataTable" data-dt-idx="<?php echo $i ?>" tabindex="0" class="page-link"><?php echo $i ?></a></li>
                 <?php
                 } ?>
-                <li class="paginate_button page-item next <?php echo ($this->currentPage < $this->totalPage ? '' :  ' disabled') ?>" id="dataTable_next"><a href="<?php echo APP_URL . '/admin/category/?page=' . ($this->currentPage < $this->totalPage ? $this->currentPage + 1 :  $this->totalPage) ?>" aria-controls="dataTable" data-dt-idx="7" tabindex="0" class="page-link"><i class="fas fa-chevron-right"></i></a></li>
+                <li class="paginate_button page-item next <?php echo ($this->currentPage < $this->totalPage ? '' :  ' disabled') ?>" id="dataTable_next"><a href="<?php echo $this->bindQuery('page', ($this->currentPage < $this->totalPage ? $this->currentPage + 1 :  $this->totalPage)) ?>" aria-controls="dataTable" data-dt-idx="7" tabindex="0" class="page-link"><i class="fa fa-chevron-right"></i></a></li>
               </ul>
             </div>
           </span>

@@ -17,7 +17,7 @@ class Coupon extends Model
 
   public function getAll(): array
   {
-    $query = 'select * from coupons';
+    $query = 'select * from coupons order by id desc';
     try {
       return $this->selectQuery($query);
     } catch (PDOException $ex) {
@@ -29,7 +29,7 @@ class Coupon extends Model
     $total = $this->getCount();
     $start = Pagination::getStart($total, $page);
     $limit = NUMBER_PER_PAGE;
-    return $this->selectQuery("select * from coupons limit $start, $limit");
+    return $this->selectQuery("select * from coupons order by id desc limit $start, $limit");
   }
 
   public function findById($id)

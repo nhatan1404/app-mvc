@@ -49,11 +49,13 @@ class Request
 
   public function getUrl(): string
   {
-    return $this->url;
+    $path = '';
+    if (substr($this->url, 0, 1) !== '/') $path .= '/';
+    return $path . $this->url;
   }
 
   public function getQuery()
   {
-    return $this->get('QUERY_STRING');
+    return $_GET;
   }
 }

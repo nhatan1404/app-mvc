@@ -10,19 +10,18 @@ use App\Models\Category;
 
 class CategoryController extends Controller
 {
-  private $modelCategory;
-
   public function __construct()
   {
     parent::__construct();
+
     if (!$this->auth->isLoggedIn() || !$this->auth->isAdmin()) {
       $this->view->redirect('/');
-      exit;
     }
+
     $this->modelCategory = new Category();
   }
 
-  public function index()
+  public function index(): void
   {
     $page = $this->body->get('page', 1);
     $this->view->categories = $this->modelCategory->getListPaginate($page);
@@ -33,7 +32,7 @@ class CategoryController extends Controller
   }
 
 
-  public function create()
+  public function create(): void
   {
     $this->view->categories = $this->modelCategory->getListParentCategory();
     $this->view->title = 'Tạo danh mục';
@@ -41,17 +40,19 @@ class CategoryController extends Controller
   }
 
 
-  public function store()
+  public function store(): void
   {
     $title = $this->body->post('title');
     $description = $this->body->post('description');
     $parrent_id = (int) $this->body->post('parent_id');
-    $this->validator->name('title')->value($title)->label('Tên danh mục')->string()->required();
+
+    $this->validator->name('title')->value($title)->label('Tên danh mục')->string()->minLen(2)->required();
 
     if (!$this->validator->isValid()) {
       $this->session->set($this->view->validation(), $this->validator->getErrors());
       $this->view->redirect('/admin/category/create');
     }
+
     $slug = Formatter::slugify($title);
     $rowCount = $this->modelCategory->save([$title, $description, $slug, $parrent_id]);
 
@@ -63,41 +64,50 @@ class CategoryController extends Controller
     $this->view->redirect('/admin/category');
   }
 
-  public function show($id): void
+  public function show(int $id): void
   {
     $category = $this->modelCategory->findById($id);
+
     if ($category == null) {
       $this->view->notFound('Danh mục không tồn tại');
-      return;
     }
     $this->view->category = $category;
     $this->view->title = 'Chi tiết danh mục';
     $this->view->render('admin.category.detail');
   }
 
-  public function edit($id): void
+  public function edit(int $id): void
   {
     $category = $this->modelCategory->findById($id);
+
     if ($category == null) {
       $this->view->notFound('Danh mục không tồn tại');
-      return;
     }
+
     $this->view->categories = $this->modelCategory->getListParentCategory();
     $this->view->category = $category;
     $this->view->render('admin.category.edit');
   }
 
-  public function update($id)
+  public function update(int $id): void
   {
+    $category = $this->modelCategory->findById($id);
+
+    if ($category == null) {
+      $this->view->notFound('Danh mục không tồn tại');
+    }
+
     $title = $this->body->post('title');
     $description = $this->body->post('description');
     $parrent_id = (int) $this->body->post('parent_id');
-    $this->validator->name('title')->value($title)->label('Tên danh mục')->string()->required();
+
+    $this->validator->name('title')->value($title)->label('Tên danh mục')->string()->minLen(2)->required();
 
     if (!$this->validator->isValid()) {
       $this->session->set($this->view->validation(), $this->validator->getErrors());
       $this->view->redirect('/admin/category/' . $id . '/edit');
     }
+
     $rowCount = $this->modelCategory->update([$title, $description, $parrent_id, $id]);
 
     if ($rowCount > 0) {
@@ -108,9 +118,10 @@ class CategoryController extends Controller
     $this->view->redirect('/admin/category');
   }
 
-  public function destroy($id)
+  public function destroy(int $id): void
   {
     $isDeleted = $this->modelCategory->remove($id) > 0;
+
     if ($isDeleted) {
       $this->view->createFlashMsg('success', 'Xoá danh mục thành công', FlashMessage::FLASH_SUCCESS);
     } else {

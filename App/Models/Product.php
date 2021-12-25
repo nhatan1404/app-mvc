@@ -16,6 +16,14 @@ class Product extends Model
     return $data->total;
   }
 
+  public function getCountSearch(string $keyword)
+  {
+    $query = 'select count(id) as total from products where title like ?';
+    $params = ["%$keyword%"];
+    $data = $this->selectQuery($query, $params)[0];
+    return $data->total;
+  }
+
   public function getCountByCatId($id)
   {
     $category = $this->selectQuery("select parent_id from categories where id = ? limit 1", [$id])[0];
@@ -46,12 +54,25 @@ class Product extends Model
     }
   }
 
-  public function getListPaginate($page)
+  public function getListPaginate(int $page, string $sort = 'new')
   {
+    $orderBy = $this->orderBy($sort);
     $total = $this->getCount();
     $start = Pagination::getStart($total, $page);
     $limit = NUMBER_PER_PAGE;
-    return $this->selectQuery("select products.*, categories.title as category from products left join categories on products.category_id = categories.id order by products.id desc limit $start, $limit");
+    return $this->selectQuery("select products.*, categories.title as category from products left join categories on products.category_id = categories.id $orderBy limit $start, $limit");
+  }
+
+
+  public function getListSearch(int $page, string $keyword, string $sort = 'new')
+  {
+    $orderBy = $this->orderBy($sort);
+    $total = $this->getCountSearch($keyword);
+    $start = Pagination::getStart($total, $page);
+    $limit = NUMBER_PER_PAGE;
+    $params = ["%$keyword%"];
+    $query = "select products.*, categories.title as category from products left join categories on products.category_id = categories.id where products.title like ? $orderBy limit $start, $limit";
+    return $this->selectQuery($query, $params);
   }
 
   public function getListByCatId($id, $page, $sort = 'new')
@@ -85,7 +106,7 @@ class Product extends Model
 
   public function findById($id)
   {
-    $query = 'select * from products where id = ?';
+    $query = 'select products.*, categories.title as category_title from products join categories on products.category_id = categories.id where products.id = ?';
     try {
       $data = $this->selectQuery($query, [$id]);
       return count($data) != 0 ? $data[0] : null;
@@ -139,6 +160,26 @@ class Product extends Model
     $query = 'update products set title = ?, description = ?, quantity = ?, status = ?, images = ?, sold = ?, price = ?, discount = ?, category_id = ? where id = ?';
     try {
       return $this->updateQuery($query, $product);
+    } catch (PDOException $ex) {
+      return -1;
+    }
+  }
+
+  public function updateQuantity(int $quantity, int $id): int
+  {
+    $query = 'update products set quantity = ? where id = ?';
+    try {
+      return $this->updateQuery($query, [$quantity, $id]);
+    } catch (PDOException $ex) {
+      return -1;
+    }
+  }
+
+  public function updateSold(int $sold, int $id): int
+  {
+    $query = 'update products set sold = ? where id = ?';
+    try {
+      return $this->updateQuery($query, [$sold, $id]);
     } catch (PDOException $ex) {
       return -1;
     }

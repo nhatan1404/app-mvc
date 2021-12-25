@@ -10,20 +10,19 @@ use App\Models\Address;
 
 class UserController extends Controller
 {
-  private $modelUser;
-
   public function __construct()
   {
     parent::__construct();
+
     if (!$this->auth->isLoggedIn() || !$this->auth->isAdmin()) {
       $this->view->redirect('/');
-      exit;
     }
+
     $this->modelUser = new User();
     $this->modelAddress = new Address();
   }
 
-  public function index()
+  public function index(): void
   {
     $page = $this->body->get('page', 1);
     $this->view->users = $this->modelUser->getListPaginate($page);
@@ -34,14 +33,14 @@ class UserController extends Controller
   }
 
 
-  public function create()
+  public function create(): void
   {
     $this->view->title = 'Tạo tài khoản';
     $this->view->render('admin.user.create');
   }
 
 
-  public function store()
+  public function store(): void
   {
     $firstname = $this->body->post('firstname');
     $lastname = $this->body->post('lastname');
@@ -57,10 +56,10 @@ class UserController extends Controller
     $district = $this->body->post('district');
     $ward = $this->body->post('ward');
 
-    $this->validator->name('firstname')->value($firstname)->label('Tên')->string()->required();
-    $this->validator->name('lastname')->value($lastname)->label('Họ')->string()->required();
-    $this->validator->name('password')->value($password)->label('Mật khẩu')->string()->equal($repassword)->required();
-    $this->validator->name('repassword')->value($repassword)->label('Mật khẩu xác nhận')->string()->equal($password)->required();
+    $this->validator->name('firstname')->value($firstname)->label('Tên')->string()->minLen(1)->required();
+    $this->validator->name('lastname')->value($lastname)->label('Họ')->string()->minLen(1)->required();
+    $this->validator->name('password')->value($password)->label('Mật khẩu')->string()->equal($repassword)->minLen(8)->required();
+    $this->validator->name('repassword')->value($repassword)->label('Mật khẩu xác nhận')->string()->equal($password)->minLen(8)->required();
     $this->validator->name('email')->value($email)->label('Email')->string()->email()->required();
     $this->validator->name('telephone')->value($telephone)->label('Số điện thoại')->string()->phone()->required();
     // $this->validator->name('avatar')->file($avatar)->label('Ảnh đại diện')->required();
@@ -70,6 +69,12 @@ class UserController extends Controller
     $this->validator->name('province')->value($province)->label('Tỉnh')->string()->required();
     $this->validator->name('district')->value($district)->label('Thành phố/quận')->string()->required();
     $this->validator->name('ward')->value($ward)->label('Phường/xã')->string()->required();
+
+    $user = $this->modelUser->findByEmail($email);
+
+    if ($user != null) {
+     $this->validator->setError('email', 'Emal không có sẵn');
+    }
 
     if (!$this->validator->isValid()) {
       $this->session->set($this->view->validation(), $this->validator->getErrors());
@@ -81,9 +86,20 @@ class UserController extends Controller
     } else {
       $avatar = $this->body->upload('avatar');
     }
+
     $password = password_hash($password, PASSWORD_DEFAULT);
     $address_id = $this->modelAddress->save([$address, $province, $district, $ward]);
-    $rowCount = $this->modelUser->save([$firstname, $lastname, $password, $avatar, $address_id, $email, $telephone, $role, $status]);
+    $rowCount = $this->modelUser->save([
+      $firstname,
+      $lastname,
+      $password,
+      $avatar,
+      $address_id,
+      $email,
+      $telephone,
+      $role,
+      $status
+    ]);
 
     if ($rowCount > 0) {
       $this->view->createFlashMsg('success', 'Tạo tài khoản thành công', FlashMessage::FLASH_SUCCESS);
@@ -96,36 +112,38 @@ class UserController extends Controller
     $this->view->redirect('/admin/user');
   }
 
-  public function show($id): void
+  public function show(int $id): void
   {
     $user = $this->modelUser->findById($id);
+
     if ($user == null) {
       $this->view->notFound('Tài khoản không tồn tại');
-      return;
     }
+
     $this->view->user = $user;
     $this->view->title = 'Chi tiết tài khoản';
     $this->view->render('admin.user.detail');
   }
 
-  public function edit($id): void
+  public function edit(int $id): void
   {
     $user = $this->modelUser->findById($id);
+
     if ($user == null) {
       $this->view->notFound('Tài khoản không tồn tại');
-      return;
     }
+
     $this->view->user = $user;
     $this->view->title = 'Sửa Tài Khoản';
     $this->view->render('admin.user.edit');
   }
 
-  public function update($id)
+  public function update(int $id): void
   {
     $user = $this->modelUser->findById($id);
+
     if ($user == null) {
       $this->view->notFound('Tài khoản không tồn tại');
-      return;
     }
 
     $firstname = $this->body->post('firstname');
@@ -140,8 +158,8 @@ class UserController extends Controller
     $district = $this->body->post('district');
     $ward = $this->body->post('ward');
 
-    $this->validator->name('firstname')->value($firstname)->label('Tên')->string()->required();
-    $this->validator->name('lastname')->value($lastname)->label('Họ')->string()->required();
+    $this->validator->name('firstname')->value($firstname)->label('Tên')->string()->minLen(1)->required();
+    $this->validator->name('lastname')->value($lastname)->label('Họ')->string()->minLen(1)->required();
     $this->validator->name('email')->value($email)->label('Email')->string()->email()->required();
     $this->validator->name('telephone')->value($telephone)->label('Số điện thoại')->string()->phone()->required();
     //$this->validator->name('avatar')->file($avatar)->label('Ảnh đại diện')->required();
@@ -152,18 +170,40 @@ class UserController extends Controller
     $this->validator->name('district')->value($district)->label('Thành phố/quận')->string()->required();
     $this->validator->name('ward')->value($ward)->label('Phường/xã')->string()->required();
 
+    $checkUser = $this->modelUser->findByEmail($email);
+
+    if ($user != null && $user->id != $checkUser->id) {
+     $this->validator->setError('email', 'Emal không có sẵn');
+    }
+
     if (!$this->validator->isValid()) {
       $this->session->set($this->view->validation(), $this->validator->getErrors());
       $this->view->redirect('/admin/user/' . $id . '/edit');
     }
+
     if ($avatar == null) {
       $avatar =  $user->avatar;
     } else {
       $avatar = $this->body->upload('avatar');
     }
 
-    $rowCountUser = $this->modelUser->update([$firstname, $lastname, $avatar, $email, $telephone, $role, $status, $id]);
-    $rowCountAddress = $this->modelAddress->update([$address, $province, $district, $ward, (int)$user->address_id]);
+    $rowCountUser = $this->modelUser->update([
+      $firstname,
+      $lastname,
+      $avatar,
+      $email,
+      $telephone,
+      $role,
+      $status,
+      $id
+    ]);
+    $rowCountAddress = $this->modelAddress->update([
+      $address,
+      $province,
+      $district,
+      $ward,
+      $user->address_id
+    ]);
 
     if ($rowCountUser > 0 || $rowCountAddress > 0) {
       if ($this->view->isLocalImage($user->avatar) && file_exists($user->avatar)) {
@@ -179,14 +219,17 @@ class UserController extends Controller
     $this->view->redirect('/admin/user');
   }
 
-  public function destroy($id)
+  public function destroy(int $id): void
   {
     $user = $this->modelUser->findById($id);
+
     if ($user == null) {
       $this->view->notFound('Tài khoản không tồn tại');
       return;
     }
+
     $isDeleted = $this->modelUser->remove($id) > 0;
+
     if ($isDeleted) {
       if ($this->view->isLocalImage($user->avatar) && file_exists($user->avatar)) {
         unlink($user->avatar);
@@ -198,24 +241,26 @@ class UserController extends Controller
     $this->view->redirect('/admin/user');
   }
 
-  public function updatePassword($id)
+  public function updatePassword(int $id): void
   {
     $user = $this->modelUser->findById($id);
+
     if ($user == null) {
       $this->view->notFound('Tài khoản không tồn tại');
-      return;
     }
+
     $password = $this->body->post('password-modal');
     $repassword = $this->body->post('repassword-modal');
-    $this->validator->name('password')->value($password)->label('Mật khẩu')->string()->equal($repassword)->required();
-    $this->validator->name('repassword')->value($repassword)->label('Mật khẩu xác nhận')->string()->equal($password)->required();
+
+    $this->validator->name('password')->value($password)->label('Mật khẩu')->string()->equal($repassword)->minLen(8)->required();
+    $this->validator->name('repassword')->value($repassword)->label('Mật khẩu xác nhận')->string()->equal($password)->minLen(8)->required();
+
     if (!$this->validator->isValid()) {
-      $this->view->createFlashMsg('error', 'Mật khẩu không khớp', FlashMessage::FLASH_ERROR);
+      $this->view->createFlashMsg('error', 'Mật khẩu không khớp hoặc không đủ 8 ký tự', FlashMessage::FLASH_ERROR);
       $this->view->redirect('/admin/user/' . $id . '/edit');
     }
 
     $password = password_hash($password, PASSWORD_DEFAULT);
-
     $rowCount = $this->modelUser->updatePassword([$password, $id]);
 
     if ($rowCount > 0) {

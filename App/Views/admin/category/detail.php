@@ -36,15 +36,23 @@
                 <td>Danh Mục Cha</td>
                 <td><?php echo $this->category->parent_title ?? '...' ?></td>
               </tr>
+              <tr>
+                <td>Ngày tạo</td>
+                <td><?php echo $this->helper->formatDate($this->category->created_at) ?></td>
+              </tr>
+              <tr>
+                <td>Ngày cập nhật</td>
+                <td><?php echo $this->helper->formatDate($this->category->updated_at) ?></td>
+              </tr>
             </tbody>
           </table>
 
         </div>
         <div class="card-footer d-flex">
-          <a href="https://nhatan.ga/dashboard/category/19/edit" class="btn btn-success mr-2"><i class="fas fa-edit"></i>
+          <a href="<?php echo $this->helper->createUrl('admin/category/' . $this->category->id . '/edit') ?>" class="btn btn-success mr-2"><i class="fas fa-edit"></i>
             Sửa</a>
-          <form method="POST" action="https://nhatan.ga/dashboard/category/19">
-            <input type="hidden" name="_token" value="RfDLJIdKbDCgNfSmPkqdHgOFuAreqb3jKNClKzp8"> <input type="hidden" name="_method" value="delete"> <button class="btn btn-danger btnDelete" data-id="19" data-toggle="tooltip" data-placement="bottom" title="Xoá"><i class="fas fa-trash-alt"> Xoá</i></button>
+          <form method="POST" action="<?php echo $this->helper->createUrl('admin/category/' . $this->category->id . '/delete') ?>">
+            <button class="btn btn-danger btnDelete" data-id="19" data-toggle="tooltip" data-placement="bottom" title="Xoá"><i class="fas fa-trash-alt"> Xoá</i></button>
           </form>
         </div>
       </div>

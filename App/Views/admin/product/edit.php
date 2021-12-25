@@ -3,7 +3,7 @@
     <div class="card">
       <h5 class="card-header">Tạo Sản Phẩm</h5>
       <div class="card-body">
-        <form method="post" action="<?php echo APP_URL . '/admin/product/' . $this->product->id . '/update' ?>" enctype="multipart/form-data">
+        <form method="post" action="<?php echo $this->helper->createUrl('/admin/product/' . $this->product->id . '/update') ?>" enctype="multipart/form-data">
           <div class="form-group">
             <label for="inputTitle" class="col-form-label">Tiêu đề: </label>
             <input class="form-control" type="text" id="inputTitle" name="title" placeholder="Nhập tiêu đề" value="<?php echo $this->product->title ?>" />
@@ -49,7 +49,7 @@
           <div class="form-group">
             <label for="inputImages" class="col-form-label">Ảnh: </label>
             <input class="form-control" id="inputImage" name="images" oninput="imgReview.src=window.URL.createObjectURL(this.files[0])" type="file">
-            <img id="imgReview" src="<?php echo $this->isLocalImage($this->product->images) ? APP_URL . '/' . $this->product->images : $this->product->images ?>" class="mt-3 img-fluid img-thumbnail" style="max-width: 200px" />
+            <img id="imgReview" src="<?php echo $this->helper->createUrlImg($this->product->images) ?>" class="mt-3 img-fluid img-thumbnail" style="max-width: 200px" />
           </div>
 
           <div class="form-group">

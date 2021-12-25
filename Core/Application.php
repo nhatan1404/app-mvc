@@ -20,7 +20,11 @@ class Application
   {
     spl_autoload_register(function ($className) {
       $className = str_replace("\\", DIRECTORY_SEPARATOR, $className);
-      require_once './' . $className . '.php';
+      $path = './' . $className . '.php';
+      if (!file_exists($path)) {
+        die('Class không tồn tại');
+      }
+      require_once $path;
     });
   }
 

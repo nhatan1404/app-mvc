@@ -17,13 +17,13 @@ class AddressController extends Controller
   {
     $province = $this->body->post('province');
     $districts  = $this->modelAddress->getListDistricts($province);
-    $this->view->json(["districts" =>  $districts]);
+    $this->view->json(["districts" =>  $districts], 200);
   }
 
   public function getListWards(): void
   {
     $district = $this->body->post('ward');
     $wards  = $this->modelAddress->getListWards($district);
-    $this->view->json(["wards" => $wards, "code" => $district]);
+    $this->view->json(["wards" => $wards, "code" => $district], 200);
   }
 }

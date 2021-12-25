@@ -35,10 +35,21 @@
           </form>
         </div>
         <div class="card-footer text-center">
-          <div class="small"><a href="<?php echo $this->helper->createUrl('register') ?>">Chưa có tài khoản? Đăng ký!</a>
+          <div class="small"><a style="f:" href="<?php echo $this->helper->createUrl('register') ?>">Chưa có tài khoản? Đăng ký!</a>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+<style>
+  .small a {
+    font-size: 14px;
+    font-weight: 600;
+    color: #7fad39;
+  }
+
+  .small a:hover {
+    color: #000;
+  }
+</style>

@@ -19,7 +19,7 @@ class AuthHelper
     $this->isLogged = $this->checkValid();
   }
 
-  public function isLoggedIn()
+  public function isLoggedIn(): bool
   {
     return $this->isLogged;
   }
@@ -39,7 +39,7 @@ class AuthHelper
     return $this->user->lastname . ' ' . $this->user->firstname ?? null;
   }
 
-  public function isAdmin()
+  public function isAdmin(): bool
   {
     return $this->user->role == 'admin';
   }

@@ -118,15 +118,26 @@
             </div>
             <!-- Form Group (create account submit)-->
             <div class="text-center">
-              <button class="btn btn-primary btn-lg pl-5 pr-5" type="submit">Đăng Ký</button>
+              <button class="btn btn-success bg-green  pl-5 pr-5" type="submit">Đăng Ký</button>
             </div>
           </form>
         </div>
         <div class="card-footer text-center">
-          <div class="small"><a href="https://nhatan.ga/user/login">Đã có tài khoản? Đăng nhập</a>
+          <div class="small"><a href="<?php echo $this->helper->createUrl('login') ?>">Đã có tài khoản? Đăng nhập</a>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+<style>
+  .small a {
+    font-size: 14px;
+    font-weight: 600;
+    color: #7fad39;
+  }
+
+  .small a:hover {
+    color: #000;
+  }
+</style>

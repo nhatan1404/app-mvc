@@ -1,8 +1,7 @@
 $(document).ready(function () {
   $('input, select, textarea').focus(function () {
-    const msg = $(this).next();
+    const msg = $(this).nextAll('.text-danger');
     msg.hide('slow', function () {});
-    //$(this).next().siblings('.text-danger').hide();
   });
 
   $('.btnDelete').click(function (e) {

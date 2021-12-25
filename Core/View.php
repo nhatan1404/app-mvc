@@ -30,25 +30,34 @@ class View
     return str_replace('.', '/', $path);
   }
 
-  public function getUrl(bool $hasQuery = false): string
+  public function getUrl(): string
   {
-    $query = $hasQuery &&  $this->request->getQuery() != '' ? '?' . $this->request->getQuery() : '';
-    return APP_URL . $this->request->getUrl() . $query;
+    return APP_URL . $this->request->getUrl();
   }
 
-  // public function bindQuery($name, $value): void
-  // {
-  //   $url = $this->getUrl(true);
-  //   $query = explode('?', $url);
-  //   $query = end($query);
-  //   if ($query == $this->getUrl()) return;
+  public function getQueryByKey(string $key): string
+  {
+    $query = $this->request->getQuery();
+    if (array_key_exists($key, $query)) return $query[$key];
+    return '';
+  }
 
-  //   $position = strpos($url, $name, strpos($url, '?'));
-  //   var_dump($query);
-
-  //   $lastUrl = '';
-  //   var_dump(substr($url, $position, strlen($name)+1));
-  // }
+  public function bindQuery($name, $value): string
+  {
+    $url = $this->getUrl();
+    $query = $this->request->getQuery();
+    if (!array_key_exists($name, $query)) {
+      $query[$name] = $value;
+    }
+    $queryString = '';
+    $position = 0;
+    foreach ($query as $key => $val) {
+      $queryString .= $position == 0 ? '?' : '&';
+      ($key == $name) ? $queryString .= $key . '=' . $value : $queryString .= $key . '=' . $val;
+      $position++;
+    }
+    return $url . $queryString;
+  }
 
   public function render(string $path, bool $isIncludeLayout = true)
   {
@@ -70,12 +79,13 @@ class View
     header('Content-type: application/json');
     http_response_code($statusCode);
     echo json_encode($data);
+    die();
   }
 
   public function redirect(string $path): void
   {
     header('Location: ' . APP_URL . $path);
-    exit;
+    die();
   }
 
   public function createFlashMsg(string $name, string $message, string $type): void
@@ -115,5 +125,6 @@ class View
     $this->title = 'Trang không tồn tại';
     $this->msg = $msg;
     $this->render('error.404', false);
+    die();
   }
 }

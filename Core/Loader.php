@@ -10,46 +10,38 @@ class Loader
   {
   }
 
-  public function getController($name)
+  private function isHasController(string $key): bool
   {
-    return $this->controllers[$name];
+    return array_key_exists($key, $this->controllers);
   }
 
-  public function isHasController($name): bool
-  {
-    return array_key_exists($name, $this->controllers);
-  }
-
-  public function addController($controller): void
+  private function addController(string $controller): void
   {
     $class = new $controller();
     $this->controllers[$controller] = $class;
   }
 
-  public function getControllerName($controller): string
+  private function getControllerName(string $controller): string
   {
     $controller = 'App\\Controllers\\' . ucfirst($controller);
     return str_replace('/', '\\', $controller);
   }
 
-  public function getModel($name): string
-  {
-    return $this->models[$name];
-  }
-
-  public function loadAction($controller, $method, $arguments = []): mixed
-  {
-    $class = $this->controller($controller);
-    return call_user_func_array([$class, $method], $arguments);
-  }
-
-  public function controller($controller)
+  public function getController(string $controller)
   {
     $controller = $this->getControllerName($controller);
     if (!$this->isHasController($controller)) {
       $this->addController($controller);
     }
 
-    return $this->getController($controller);
+    return $this->controllers[$controller];
+  }
+
+  public function loadAction(string $controller, string $method, array $arguments = []): void
+  {
+    $class = $this->getController($controller);
+    if (class_exists(get_class($class)) && method_exists($class, $method))
+      call_user_func_array([$class, $method], $arguments);
+    else die('Class hoặc Method không tồn tại');
   }
 }

@@ -91,11 +91,9 @@
           foreach ($this->helper->getRelatedProduct(4) as $product) { ?>
             <div class="col-lg-3 col-md-4 col-sm-6">
               <div class="product__item">
-                <div class="product__item__pic set-bg" data-setbg="<?php echo $this->isLocalImage($product->images) ? APP_URL . '/' . $product->images : $product->images ?>">
+                <div class="product__item__pic set-bg" data-setbg="<?php echo $this->helper->createUrlImg($product->images) ?>">
                   <ul class="product__item__pic__hover">
-                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                    <li><a href="javascript:void(0)" onclick="addCart(<?php echo $product->id ?>)"><i class="fa fa-shopping-cart"></i></a></li>
                   </ul>
                 </div>
                 <div class="product__item__text">

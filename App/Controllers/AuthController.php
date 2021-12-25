@@ -19,32 +19,32 @@ class AuthController extends Controller
     $this->modelAddress = new Address();
   }
 
-  public function login()
+  public function login(): void
   {
     if ($this->auth->isLoggedIn()) {
       $this->view->redirect('/');
-      exit;
     }
+
     $this->view->title = 'Đăng Nhập';
     $this->view->render('site.user.login');
   }
 
-  public function register()
+  public function register(): void
   {
     if ($this->auth->isLoggedIn()) {
       $this->view->redirect('/');
-      exit;
     }
+
     $this->view->title = 'Đăng Ký';
     $this->view->render('site.user.register');
   }
 
-  public function handleLogin()
+  public function handleLogin(): void
   {
     if ($this->auth->isLoggedIn()) {
       $this->view->redirect('/');
-      exit;
     }
+
     $email = $this->body->post('email');
     $password = $this->body->post('password');
     $remember = $this->body->post('remember', false);
@@ -63,11 +63,13 @@ class AuthController extends Controller
     ];
 
     $user = $this->modelAuth->findDetailLogin($email);
+
     if ($user == null) {
       $this->session->set($this->view->validation(), $errors);
       $this->view->redirect('/login');
     } else {
       $isVerified =  password_verify($password, $user->password);
+
       if ($isVerified) {
         $token = Hash::uuidv4();
         $this->modelAuth->updateToken($user->id, $token);
@@ -78,6 +80,7 @@ class AuthController extends Controller
         } else {
           $this->session->set('auth', $token);
         }
+
         $this->view->redirect('/');
       } else {
         $this->session->set($this->view->validation(), $errors);
@@ -86,7 +89,7 @@ class AuthController extends Controller
     }
   }
 
-  public function handleRegister()
+  public function handleRegister(): void
   {
     $firstname = $this->body->post('firstname');
     $lastname = $this->body->post('lastname');
@@ -101,10 +104,11 @@ class AuthController extends Controller
     $province = $this->body->post('province');
     $district = $this->body->post('district');
     $ward = $this->body->post('ward');
-    $this->validator->name('firstname')->value($firstname)->label('Tên')->string()->required();
-    $this->validator->name('lastname')->value($lastname)->label('Họ')->string()->required();
-    $this->validator->name('password')->value($password)->label('Mật khẩu')->string()->equal($repassword)->required();
-    $this->validator->name('repassword')->value($repassword)->label('Mật khẩu xác nhận')->string()->equal($password)->required();
+
+    $this->validator->name('firstname')->value($firstname)->label('Tên')->string()->minLen(1)->required();
+    $this->validator->name('lastname')->value($lastname)->label('Họ')->string()->minLen(1)->required();
+    $this->validator->name('password')->value($password)->label('Mật khẩu')->string()->equal($repassword)->minLen(8)->required();
+    $this->validator->name('repassword')->value($repassword)->label('Mật khẩu xác nhận')->string()->equal($password)->minLen(8)->required();
     $this->validator->name('email')->value($email)->label('Email')->string()->email()->required();
     $this->validator->name('telephone')->value($telephone)->label('Số điện thoại')->string()->phone()->required();
     $this->validator->name('address')->value($address)->label('Địa chỉ')->string()->required();
@@ -112,15 +116,31 @@ class AuthController extends Controller
     $this->validator->name('district')->value($district)->label('Thành phố/quận')->string()->required();
     $this->validator->name('ward')->value($ward)->label('Phường/xã')->string()->required();
 
+    $checkUser = $this->modelUser->findByEmail($email);
+
+    if ($checkUser != null) {
+     $this->validator->setError('email', 'Emal không có sẵn');
+    }
+
     if (!$this->validator->isValid()) {
       $this->session->set($this->view->validation(), $this->validator->getErrors());
       $this->view->redirect('/register');
     }
+
     $password = password_hash($password, PASSWORD_DEFAULT);
-
     $address_id = $this->modelAddress->save([$address, $province, $district, $ward]);
+    $rowCount = $this->modelUser->save([
+      $firstname,
+      $lastname,
+      $password,
+      $avatar,
+      $address_id,
+      $email,
+      $telephone,
+      $role,
+      $status
+    ]);
 
-    $rowCount = $this->modelUser->save([$firstname, $lastname, $password, $avatar, $address_id, $email, $telephone, $role, $status]);
     if ($rowCount > 0) {
       $this->session->set('register-success', true);
       $this->view->redirect('/register-success');
@@ -130,7 +150,7 @@ class AuthController extends Controller
     }
   }
 
-  public function registerSuccess()
+  public function registerSuccess(): void
   {
     if ($this->session->has('register-success')) {
       $this->session->remove('register-success');
@@ -141,12 +161,12 @@ class AuthController extends Controller
     }
   }
 
-  public function handleLogout()
+  public function handleLogout(): void
   {
     if ($this->body->post('logout', false)) {
       $this->session->destroy();
       $this->cookie->destroy();
     }
-    return $this->view->redirect('/');
+    $this->view->redirect('/');
   }
 }

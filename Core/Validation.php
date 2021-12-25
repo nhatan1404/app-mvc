@@ -28,7 +28,7 @@ class Validation
     return $this;
   }
 
-  public function value(mixed $value): self
+  public function value($value): self
   {
     $this->value = $value;
     return $this;
@@ -71,7 +71,7 @@ class Validation
     return $this;
   }
 
-  public function default(mixed $value): self
+  public function default($value): self
   {
     $this->value = $value;
     return $this;
@@ -98,7 +98,7 @@ class Validation
     return $this;
   }
 
-  public function equal(mixed $value, string $msg = null): self
+  public function equal($value, string $msg = null): self
   {
     if ($this->value != $value) {
       $this->errors[$this->name] = $msg ?? $this->label . ' không trùng khớp';
@@ -163,5 +163,20 @@ class Validation
   public function getErrors(): array
   {
     return $this->errors;
+  }
+
+  public function getError(string $key): string
+  {
+    return  $this->errors[$key] ?? '';
+  }
+
+  public function setError(string $key, string $value): void
+  {
+    $this->errors[$key] = $value;
+  }
+
+  public function hasError(string $key): bool
+  {
+    return array_key_exists($key, $this->errors);
   }
 }

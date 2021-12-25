@@ -3,7 +3,7 @@
     <div class="card">
       <h5 class="card-header">Tạo Sản Phẩm</h5>
       <div class="card-body">
-        <form method="post" action="<?php echo APP_URL . '/admin/product/store' ?>" enctype="multipart/form-data">
+        <form method="post" action="<?php echo $this->helper->createUrl('admin/product/store') ?>" enctype="multipart/form-data">
           <div class="form-group">
             <label for="inputTitle" class="col-form-label">Tiêu đề: </label>
             <input class="form-control" type="text" id="inputTitle" name="title" placeholder="Nhập tiêu đề" value="" />

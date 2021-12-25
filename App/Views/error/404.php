@@ -79,7 +79,7 @@
 
   <div class="number">404</div>
   <div class="text"><span>Ooops...</span><br><?php echo $this->msg ?? 'Trang bạn yêu cầu không tồn tại' ?></div>
-  <a href='<?php echo APP_URL . '/admin' ?>' class='btn'>Trang Chủ </a>
+  <a href='<?php echo  $this->helper->createUrl('') ?>' class='btn'>Trang Chủ </a>
 </body>
 
 </html>

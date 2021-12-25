@@ -37,7 +37,7 @@
                     <?php foreach ($this->cart->items as $item) { ?>
                       <tr data-row="<?php echo $item->id ?>">
                         <td class="shoping__cart__item">
-                          <img class="img-fluid" style="max-width: 100px" src="<?php echo $this->isLocalImage($item->product_images) ? APP_URL . '/' . $item->product_images : $item->product_images ?>" alt="<?php echo $item->product_title ?>">
+                          <img class="img-fluid" style="max-width: 100px" src="<?php echo $this->helper->createUrlImg($item->product_images) ?>" alt="<?php echo $item->product_title ?>">
                           <h5><?php echo $item->product_title ?></h5>
                         </td>
                         <td class="shoping__cart__price">

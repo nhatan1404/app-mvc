@@ -57,9 +57,9 @@
 
           <div class="form-group">
             <label for="inputAvatar" class="col-form-label">Ảnh đại diện: </label>
-            <input id="inputAvatar" class="form-control" type="file" name="avatar" value="" />
+            <input id="inputAvatar" class="form-control" type="file" oninput="imgReview.src=window.URL.createObjectURL(this.files[0])" name="avatar" />
             <?php $this->displayError('avatar') ?>
-            <img id="holder" style="margin-top:15px;max-height:100px;">
+            <img id="imgReview" style="margin-top:15px;max-height:100px;">
           </div>
 
           <div class="row">

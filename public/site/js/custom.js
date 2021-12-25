@@ -1,4 +1,11 @@
 (function ($) {
+  $('#inputAvatar').change(function () {
+    if ($(this).val() == '') {
+      $('#btn-avatar').attr('disabled', true);
+    } else {
+      $('#btn-avatar').attr('disabled', false);
+    }
+  });
   // Load product
   var pageNumber = 2;
   $('#see-more').click(function () {
@@ -96,7 +103,6 @@ function addCart(id) {
         message: 'Có lỗi xảy ra!',
         duration: 3000,
       });
-      console.log(error);
     },
   });
 }
@@ -127,7 +133,6 @@ function updateCart(event, id, value = null) {
       type: 'post',
       url: `${__apiURL}cart/update`,
       success: function (response) {
-        console.log(response);
         const { total_item, total, message } = response;
         const total_price_item = $(`[data-price="${id}"]`);
 
@@ -273,7 +278,6 @@ $('#district').change(function () {
     },
     url: `${window.location.origin}/app-mvc/address/ward`,
     success: function (data) {
-      console.log(data);
       const { wards } = data;
       const wardSelect = $('#ward');
       wardSelect.empty();
@@ -371,4 +375,15 @@ $('#handleOrder').click(function () {
       });
     },
   });
+});
+
+$(document).ready(function () {
+  const query = window.location.search;
+  const params = new URLSearchParams(query);
+  const sort = params.get('sort');
+  if (sort) {
+    $('#sort-product').val(sort);
+    $('select').niceSelect('destroy');
+    $('select').niceSelect();
+  }
 });

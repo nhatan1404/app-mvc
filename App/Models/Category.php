@@ -17,7 +17,7 @@ class Category extends Model
 
   public function getAll(): array
   {
-    $query = 'select * from categories';
+    $query = 'select * from categories order by id desc';
     try {
       return $this->selectQuery($query);
     } catch (PDOException $ex) {
@@ -30,7 +30,7 @@ class Category extends Model
     $total = $this->getCount();
     $start = Pagination::getStart($total, $page);
     $limit = NUMBER_PER_PAGE;
-    return $this->selectQuery("select * from categories limit $start, $limit");
+    return $this->selectQuery("select * from categories order by id desc limit $start, $limit");
   }
 
   public function getListParentCategory(): array

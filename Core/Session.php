@@ -10,8 +10,6 @@ class Session
 
   public function start()
   {
-    ini_set('session.use_only_cookies', 1);
-
     if (!session_id()) {
       session_start();
     }
@@ -40,9 +38,7 @@ class Session
   public function pull($key)
   {
     $value = $this->get($key);
-
     $this->remove($key);
-
     return $value;
   }
 
@@ -54,7 +50,6 @@ class Session
   public function destroy()
   {
     session_destroy();
-
     unset($_SESSION);
   }
 }

@@ -3,7 +3,7 @@
     <div class="card">
       <h5 class="card-header">Tạo Mã Giảm Giá</h5>
       <div class="card-body">
-        <form method="post" action="<?php echo APP_URL . '/admin/coupon/store' ?>">
+        <form method="post" action="<?php echo $this->helper->createUrl('admin/coupon/store') ?>">
           <div class="form-group">
             <label for="inputCode" class="col-form-label">Mã: </label>
             <input class="form-control" type="text" id="inputCode" name="code" placeholder="Nhập mã" value="" />

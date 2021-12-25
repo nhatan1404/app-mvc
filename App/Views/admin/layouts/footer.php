@@ -24,15 +24,20 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Xác nhận</h5>
         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">×</span>
+          <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+      <div class="modal-body">
+        Bạn có muốn đăng xuất không?
+      </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-        <a class="btn btn-primary" href="login.html">Logout</a>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+        <form method="post" action="<?php echo $this->helper->createUrl('logout') ?>">
+          <input type="hidden" name="logout" value="true" />
+          <button type="submit" class="btn btn-danger">Đăng xuất</button>
+        </form>
       </div>
     </div>
   </div>
@@ -42,16 +47,16 @@
 </script>
 
 <!-- Bootstrap core JavaScript-->
-<script src="<?php echo APP_URL ?>/public/admin/js/jquery.min.js"></script>
-<script src="<?php echo APP_URL ?>/public/admin/js/bootstrap.bundle.min.js"></script>
+<script src="<?php echo $this->helper->createUrl('public/admin/js/jquery.min.js') ?>"></script>
+<script src="<?php echo $this->helper->createUrl('public/admin/js/bootstrap.bundle.min.js') ?>"></script>
 
 <!-- Core plugin JavaScript-->
-<script src="<?php echo APP_URL ?>/public/admin/js/jquery.easing.min.js"></script>
+<script src="<?php echo $this->helper->createUrl('public/admin/js/jquery.easing.min.js') ?>"></script>
 
 <!-- Custom scripts for all pages-->
-<script src="<?php echo APP_URL ?>/public/admin/js/sb-admin-2.min.js"></script>
+<script src="<?php echo $this->helper->createUrl('public/admin/js/sb-admin-2.min.js') ?>"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="<?php echo APP_URL ?>/public/admin/js/main.js"></script>
+<script src="<?php echo $this->helper->createUrl('public/admin/js/main.js') ?>"></script>
 
 </body>
 

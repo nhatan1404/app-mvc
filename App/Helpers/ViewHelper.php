@@ -82,7 +82,7 @@ class ViewHelper
     return APP_URL . str_replace('//', '/', $slug);
   }
 
-  public function createUrl(string $path  = '')
+  public function createUrl(string $path  = ''): string
   {
     $url = '/' . $path;
     return APP_URL . str_replace('//', '/', $url);
@@ -151,6 +151,6 @@ class ViewHelper
   {
     $dataStatus = ['new', 'accepted', 'delivering', 'cancel', 'done'];
     if ($status == 'cancel') return 'step-cancel';
-    return array_search($status, $dataStatus) >= $position ? 'active' : 'ádkalsd';
+    return array_search($status, $dataStatus) >= $position ? 'active' : '';
   }
 }

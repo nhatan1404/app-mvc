@@ -36,15 +36,15 @@
 
                   <tr>
                     <td>Giảm giá</td>
-                    <td> : 0 đ</td>
+                    <td> : 0đ</td>
                   </tr>
                   <tr>
                     <td>Tổng số tiền</td>
-                    <td> : <?php echo $this->helper->formatCurrency($this->order->total) ?> đ</td>
+                    <td> : <?php echo $this->helper->formatCurrency($this->order->total) ?>đ</td>
                   </tr>
                   <tr>
                     <td>Ghi chú</td>
-                    <td> : <?php echo $this->order->note == '' ? '...' : $this->order->note ?></td>
+                    <td> : <?php echo $this->order->note == '' ? 'Không có' : $this->order->note ?></td>
                   </tr>
                 </table>
               </div>
@@ -119,22 +119,7 @@
             </tbody>
           </table>
         </div>
-        <?php if (isset($this->totalPage) && isset($this->currentPage) && $this->totalPage != 1) { ?>
-          <span class="float-right">
-            <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
-              <ul class="pagination">
-                <li class="paginate_button page-item previous <?php echo ($this->currentPage < 2 ? ' disabled' :  '') ?>" id="dataTable_previous"><a href="<?php echo APP_URL . '/admin/product/?page=' . ($this->currentPage > 2 ? $this->currentPage - 1 :  1) ?>" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link"><i class="fas fa-chevron-left"></i></a></li>
-                <?php for ($i = 1; $i <= $this->totalPage; $i++) {
-                ?>
-                  <li class="paginate_button page-item <?php echo ($this->currentPage == $i ? ' active' : '') ?>"><a href="<?php echo APP_URL . '/admin/product/?page=' . $i ?>" aria-controls="dataTable" data-dt-idx="<?php echo $i ?>" tabindex="0" class="page-link"><?php echo $i ?></a></li>
-                <?php
-                } ?>
-                <li class="paginate_button page-item next <?php echo ($this->currentPage < $this->totalPage ? '' :  ' disabled') ?>" id="dataTable_next"><a href="<?php echo APP_URL . '/admin/product/?page=' . ($this->currentPage < $this->totalPage ? $this->currentPage + 1 :  $this->totalPage) ?>" aria-controls="dataTable" data-dt-idx="7" tabindex="0" class="page-link"><i class="fas fa-chevron-right"></i></a></li>
-              </ul>
-            </div>
-          </span>
-        <?php }
-      } else { ?>
+      <?php } else { ?>
         <h6 class="text-center">Danh sách trống.</h6>
       <?php } ?>
     </div>

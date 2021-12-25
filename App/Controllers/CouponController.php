@@ -9,19 +9,19 @@ use App\Models\Coupon;
 
 class CouponController extends Controller
 {
-  private $modelCoupon;
 
   public function __construct()
   {
     parent::__construct();
+
     if (!$this->auth->isLoggedIn() || !$this->auth->isAdmin()) {
       $this->view->redirect('/');
-      exit;
     }
+
     $this->modelCoupon = new Coupon();
   }
 
-  public function index()
+  public function index(): void
   {
     $page = $this->body->get('page', 1);
     $this->view->coupons = $this->modelCoupon->getListPaginate($page);
@@ -32,23 +32,28 @@ class CouponController extends Controller
   }
 
 
-  public function create()
+  public function create(): void
   {
     $this->view->title = 'Tạo mã giảm giá';
     $this->view->render('admin.coupon.create');
   }
 
 
-  public function store()
+  public function store(): void
   {
     $code = $this->body->post('code');
     $type = $this->body->post('type');
     $value = $this->body->post('value');
     $status = $this->body->post('status');
-    $this->validator->name('code')->label('Mã')->value($code)->string()->required();
+
+    $this->validator->name('code')->label('Mã')->value($code)->string()->minLen(5)->required();
     $this->validator->name('type')->label('Loại')->value($type)->string()->required();
-    $this->validator->name('value')->label('Giá trị')->value($code)->number()->required();
-    $this->validator->name('status')->label('Trạng thái')->value($code)->string()->required();
+    if ($type == 'percent') {
+      $this->validator->name('value')->label('Giá trị')->value($value)->number()->min(0)->max(100)->required();
+    } else {
+      $this->validator->name('value')->label('Giá trị')->value($value)->number()->min(0)->required();
+    }
+    $this->validator->name('status')->label('Trạng thái')->value($status)->string()->required();
 
     if (!$this->validator->isValid()) {
       $this->session->set($this->view->validation(), $this->validator->getErrors());
@@ -65,39 +70,47 @@ class CouponController extends Controller
     $this->view->redirect('/admin/coupon');
   }
 
-  public function show($id): void
+  public function show(int $id): void
   {
     $coupon = $this->modelCoupon->findById($id);
+
     if ($coupon == null) {
       $this->view->notFound('Mã giảm giá không tồn tại');
       return;
     }
+
     $this->view->coupon = $coupon;
     $this->view->title = 'Chi tiết mã giảm giá';
     $this->view->render('admin.coupon.detail');
   }
 
-  public function edit($id): void
+  public function edit(int $id): void
   {
     $coupon = $this->modelCoupon->findById($id);
+
     if ($coupon == null) {
       $this->view->notFound('Mã giảm giá không tồn tại');
-      return;
     }
+
     $this->view->coupon = $coupon;
     $this->view->render('admin.coupon.edit');
   }
 
-  public function update($id)
+  public function update(int $id)
   {
     $code = $this->body->post('code');
     $type = $this->body->post('type');
     $value = $this->body->post('value');
     $status = $this->body->post('status');
-    $this->validator->name('code')->label('Mã')->value($code)->string()->required();
+
+    $this->validator->name('code')->label('Mã')->value($code)->string()->minLen(5)->required();
     $this->validator->name('type')->label('Loại')->value($type)->string()->required();
-    $this->validator->name('value')->label('Giá trị')->value($code)->number()->required();
-    $this->validator->name('status')->label('Trạng thái')->value($code)->string()->required();
+    if ($type == 'percent') {
+      $this->validator->name('value')->label('Giá trị')->value($value)->number()->min(0)->max(100)->required();
+    } else {
+      $this->validator->name('value')->label('Giá trị')->value($value)->number()->min(0)->required();
+    }
+    $this->validator->name('status')->label('Trạng thái')->value($status)->string()->required();
 
     if (!$this->validator->isValid()) {
       $this->session->set($this->view->validation(), $this->validator->getErrors());
@@ -114,9 +127,10 @@ class CouponController extends Controller
     $this->view->redirect('/admin/coupon');
   }
 
-  public function destroy($id)
+  public function destroy(int $id)
   {
     $isDeleted = $this->modelCoupon->remove($id) > 0;
+
     if ($isDeleted) {
       $this->view->createFlashMsg('success', 'Xoá mã giảm giá thành công', FlashMessage::FLASH_SUCCESS);
     } else {

@@ -11,20 +11,20 @@ use App\Models\Category;
 
 class ProductController extends Controller
 {
-  private $modelProduct;
 
   public function __construct()
   {
     parent::__construct();
+
     if (!$this->auth->isLoggedIn() || !$this->auth->isAdmin()) {
       $this->view->redirect('/');
-      exit;
     }
+
     $this->modelProduct = new Product();
     $this->modelCategory = new Category();
   }
 
-  public function index()
+  public function index(): void
   {
     $page = $this->body->get('page', 1);
     $this->view->products = $this->modelProduct->getListPaginate($page);
@@ -35,45 +35,58 @@ class ProductController extends Controller
   }
 
 
-  public function create()
+  public function create(): void
   {
     $parentCat = $this->modelCategory->getListParentCategory();
+
     foreach ($parentCat as $parent) {
       $parent->child = $this->modelCategory->getListChildByParentId($parent->id);
     }
+
     $this->view->categories = $parentCat;
     $this->view->title = 'Tạo sản phẩm';
     $this->view->render('admin.product.create');
   }
 
 
-  public function store()
+  public function store(): void
   {
     $title = $this->body->post('title');
     $description = $this->body->post('description');
     $quantity = $this->body->post('quantity');
     $status = $this->body->post('status');
     $price = $this->body->post('price');
-    $discount = (int) $this->body->post('discount');
+    $discount = $this->body->post('discount');
     $images = $this->body->file('images');
     $category_id =  $this->body->post('category_id');
-    $this->validator->name('title')->label('Tên sản phẩm')->value($title)->string()->required();
-    $this->validator->name('description')->label('Loại')->value($description)->string()->required();
-    $this->validator->name('quantity')->label('Số lượng')->value($quantity)->number()->required();
+
+    $this->validator->name('title')->label('Tên sản phẩm')->value($title)->string()->minLen(1)->required();
+    $this->validator->name('description')->label('Mô tả')->value($description)->string()->minLen(50)->required();
+    $this->validator->name('quantity')->label('Số lượng')->value($quantity)->number()->min(0)->required();
     $this->validator->name('status')->label('Trạng thái')->value($status)->string()->required();
-    $this->validator->name('price')->label('Giá')->value($price)->number()->required();
+    $this->validator->name('price')->label('Giá')->value($price)->number()->min(500)->required();
     $this->validator->name('discount')->label('Chiết khấu')->value($discount)->default(0)->number()->min(0)->max(100)->required();
     $this->validator->name('images')->label('Ảnh')->file($images)->required();
     $this->validator->name('category_id')->label('Danh mục')->value($category_id)->number()->required();
+
     if (!$this->validator->isValid()) {
       $this->session->set($this->view->validation(), $this->validator->getErrors());
       $this->view->redirect('/admin/product/create');
     }
 
     $images = $this->body->upload('images');
-
     $slug = Formatter::slugify($title);
-    $rowCount = $this->modelProduct->save([$title, $description, (int)$quantity, $status, $slug, $images, (int)$price, (int)$discount, (int)$category_id]);
+    $rowCount = $this->modelProduct->save([
+      $title,
+      $description,
+      (int)$quantity,
+      $status,
+      $slug,
+      $images,
+      (int)$price,
+      (int)$discount,
+      (int)$category_id
+    ]);
 
     if ($rowCount > 0) {
       $this->view->createFlashMsg('success', 'Tạo sản phẩm thành công', FlashMessage::FLASH_SUCCESS);
@@ -84,55 +97,61 @@ class ProductController extends Controller
     $this->view->redirect('/admin/product');
   }
 
-  public function show($id): void
+  public function show(int $id): void
   {
     $product = $this->modelProduct->findById($id);
+
     if ($product == null) {
       $this->view->notFound('Sản phẩm không tồn tại');
-      return;
     }
+
     $this->view->product = $product;
     $this->view->title = 'Chi tiết sản phẩm';
     $this->view->render('admin.product.detail');
   }
 
-  public function edit($id): void
+  public function edit(int $id): void
   {
     $product = $this->modelProduct->findById($id);
+
     if ($product == null) {
       $this->view->notFound('Sản phẩm không tồn tại');
-      return;
     }
+
     $parentCat = $this->modelCategory->getListParentCategory();
+
     foreach ($parentCat as $parent) {
       $parent->child = $this->modelCategory->getListChildByParentId($parent->id);
     }
+
     $this->view->categories = $parentCat;
     $this->view->product = $product;
     $this->view->render('admin.product.edit');
   }
 
-  public function update($id)
+  public function update(int $id): void
   {
     $product = $this->modelProduct->findById($id);
+
     if ($product == null) {
       $this->view->notFound('Sản phẩm không tồn tại');
-      return;
     }
+
     $title = $this->body->post('title');
     $description = $this->body->post('description');
-    $quantity = (int) $this->body->post('quantity');
+    $quantity = $this->body->post('quantity');
     $status = $this->body->post('status');
-    $price = (int) $this->body->post('price');
-    $sold = (int) $this->body->post('sold');
-    $discount = (int) $this->body->post('discount');
+    $price = $this->body->post('price');
+    $sold = $this->body->post('sold');
+    $discount = $this->body->post('discount');
     $images = $this->body->file('images');
-    $category_id = (int) $this->body->post('category_id');
-    $this->validator->name('title')->label('Tên sản phẩm')->value($title)->string()->required();
-    $this->validator->name('description')->label('Loại')->value($description)->string()->required();
-    $this->validator->name('quantity')->label('Số lượng')->value($quantity)->number()->required();
+    $category_id = $this->body->post('category_id');
+
+    $this->validator->name('title')->label('Tên sản phẩm')->value($title)->string()->minLen(1)->required();
+    $this->validator->name('description')->label('Mô tả')->value($description)->string()->minLen(50)->required();
+    $this->validator->name('quantity')->label('Số lượng')->value($quantity)->number()->min(0)->required();
     $this->validator->name('status')->label('Trạng thái')->value($status)->string()->required();
-    $this->validator->name('price')->label('Giá')->value($price)->number()->required();
+    $this->validator->name('price')->label('Giá')->value($price)->number()->min(500)->required();
     $this->validator->name('discount')->label('Chiết khấu')->value($discount)->default(0)->number()->min(0)->max(100)->required();
     //$this->validator->name('images')->label('Ảnh')->file($images)->required();
     $this->validator->name('category_id')->label('Danh mục')->value($category_id)->number()->required();
@@ -148,7 +167,18 @@ class ProductController extends Controller
       $images = $this->body->upload('images');
     }
 
-    $rowCount = $this->modelProduct->update([$title, $description, $quantity, $status, $images, $sold, $price, $discount, $category_id, $product->id]);
+    $rowCount = $this->modelProduct->update([
+      $title,
+      $description,
+      (int) $quantity,
+      $status,
+      $images,
+      (int)$sold,
+      (int)$price,
+      (int)$discount,
+      (int)$category_id,
+      $product->id
+    ]);
 
     if ($rowCount > 0) {
       if (!$this->body->isEmptyFile('images')) {
@@ -166,14 +196,16 @@ class ProductController extends Controller
     $this->view->redirect('/admin/product');
   }
 
-  public function destroy(int $id)
+  public function destroy(int $id): void
   {
     $product = $this->modelProduct->findById($id);
+
     if ($product == null) {
       $this->view->notFound('Sản phẩm không tồn tại');
-      return;
     }
+
     $isDeleted = $this->modelProduct->remove($id) > 0;
+
     if ($isDeleted) {
       if ($this->view->isLocalImage($product->images) && file_exists($product->images)) {
         unlink($product->images);

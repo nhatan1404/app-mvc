@@ -179,3 +179,66 @@ ul.row-sm {
   margin-bottom: 5px;
   color: #212529;
 }
+
+.pagination .previous .page-link,
+.pagination .next .page-link,
+.pagination .page-link {
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  margin: 5px;
+  color: #7fad39;
+  font-size: 1.15rem;
+  border-color: rgb(127, 173, 57);
+}
+
+.pagination .disabled .page-link {
+  opacity: 0.6;
+}
+
+.page-item.active .page-link {
+  color: #fff;
+  font-weight: 600;
+  background-color: #7fad39;
+  border-color: rgb(127, 173, 57);
+}
+
+.upper {
+  height: 100px;
+}
+
+.upper img {
+  width: 100%;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.user {
+  position: relative;
+}
+
+.profile img {
+  height: 80px;
+  width: 80px;
+  margin-top: 2px;
+}
+
+.profile {
+  position: absolute;
+  top: -50px;
+  left: 38%;
+  height: 90px;
+  width: 90px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+}
+
+.follow {
+  border-radius: 15px;
+  padding-left: 20px;
+  padding-right: 20px;
+  height: 35px;
+}

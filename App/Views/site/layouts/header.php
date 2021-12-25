@@ -7,22 +7,39 @@
   <meta name="keywords" content="Ogani, unica, creative, html">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="apple-touch-icon" sizes="57x57" href="<?php echo $this->helper->createUrl('public/site/images/favicon/apple-icon-57x57.png') ?>">
+  <link rel="apple-touch-icon" sizes="60x60" href="<?php echo $this->helper->createUrl('public/site/images/favicon/apple-icon-60x60.png') ?>">
+  <link rel="apple-touch-icon" sizes="72x72" href="<?php echo $this->helper->createUrl('public/site/images/favicon/apple-icon-72x72.png') ?>">
+  <link rel="apple-touch-icon" sizes="76x76" href="<?php echo $this->helper->createUrl('public/site/images/favicon/apple-icon-76x76.png') ?>">
+  <link rel="apple-touch-icon" sizes="114x114" href="<?php echo $this->helper->createUrl('public/site/images/favicon/apple-icon-114x114.png') ?>">
+  <link rel="apple-touch-icon" sizes="120x120" href="<?php echo $this->helper->createUrl('public/site/images/favicon/apple-icon-120x120.png') ?>">
+  <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $this->helper->createUrl('public/site/images/favicon/apple-icon-144x144.png') ?>">
+  <link rel="apple-touch-icon" sizes="152x152" href="<?php echo $this->helper->createUrl('public/site/images/favicon/apple-icon-152x152.png') ?>">
+  <link rel="apple-touch-icon" sizes="180x180" href="<?php echo $this->helper->createUrl('public/site/images/favicon/apple-icon-180x180.png') ?>">
+  <link rel="icon" type="image/png" sizes="192x192" href="<?php echo $this->helper->createUrl('public/site/images/favicon/android-icon-192x192.png') ?>">
+  <link rel="icon" type="image/png" sizes="32x32" href="<?php echo $this->helper->createUrl('public/site/images/favicon/favicon-32x32.png') ?>">
+  <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $this->helper->createUrl('public/site/images/favicon/favicon-96x96.png') ?>">
+  <link rel="icon" type="image/png" sizes="16x16" href="<?php echo $this->helper->createUrl('public/site/images/favicon/favicon-16x16.png') ?>">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="<?php echo $this->helper->createUrl('public/site/images/favicon/ms-icon-144x144.png') ?>">
+  <meta name="theme-color" content="#ffffff">
+
   <title><?php echo $this->title ?? APP_NAME ?></title>
 
   <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
 
   <!-- Css Styles -->
-  <link rel="stylesheet" href="<?php echo APP_URL . '/public/site/css' ?>/bootstrap.min.css" type="text/css">
-  <link rel="stylesheet" href="<?php echo APP_URL . '/public/site/css' ?>/font-awesome.min.css" type="text/css">
-  <link rel="stylesheet" href="<?php echo APP_URL . '/public/site/css' ?>/elegant-icons.css" type="text/css">
-  <link rel="stylesheet" href="<?php echo APP_URL . '/public/site/css' ?>/nice-select.css" type="text/css">
-  <link rel="stylesheet" href="<?php echo APP_URL . '/public/site/css' ?>/jquery-ui.min.css" type="text/css">
-  <link rel="stylesheet" href="<?php echo APP_URL . '/public/site/css' ?>/owl.carousel.min.css" type="text/css">
-  <link rel="stylesheet" href="<?php echo APP_URL . '/public/site/css' ?>/slicknav.min.css" type="text/css">
-  <link rel="stylesheet" href="<?php echo APP_URL . '/public/site/css' ?>/notyf.min.css" type="text/css">
-  <link rel="stylesheet" href="<?php echo APP_URL . '/public/site/css' ?>/style.css" type="text/css">
-  <link rel="stylesheet" href="<?php echo APP_URL . '/public/site/css' ?>/custom.css" type="text/css">
+  <link rel="stylesheet" href="<?php echo $this->helper->createUrl('public/site/css/bootstrap.min.css') ?>" type="text/css">
+  <link rel="stylesheet" href="<?php echo $this->helper->createUrl('public/site/css/font-awesome.min.css') ?>" type="text/css">
+  <link rel="stylesheet" href="<?php echo $this->helper->createUrl('public/site/css/elegant-icons.css') ?>" type="text/css">
+  <link rel="stylesheet" href="<?php echo $this->helper->createUrl('public/site/css/nice-select.css') ?>" type="text/css">
+  <link rel="stylesheet" href="<?php echo $this->helper->createUrl('public/site/css/jquery-ui.min.css') ?>" type="text/css">
+  <link rel="stylesheet" href="<?php echo $this->helper->createUrl('public/site/css/owl.carousel.min.css') ?>" type="text/css">
+  <link rel="stylesheet" href="<?php echo $this->helper->createUrl('public/site/css/slicknav.min.css') ?>" type="text/css">
+  <link rel="stylesheet" href="<?php echo $this->helper->createUrl('public/site/css/notyf.min.css') ?>" type="text/css">
+  <link rel="stylesheet" href="<?php echo $this->helper->createUrl('public/site/css/style.css') ?>" type="text/css">
+  <link rel="stylesheet" href="<?php echo $this->helper->createUrl('public/site/css/custom.css') ?>" type="text/css">
 </head>
 
 <body>
@@ -35,7 +52,7 @@
   <div class="humberger__menu__overlay"></div>
   <div class="humberger__menu__wrapper">
     <div class="humberger__menu__logo">
-      <a href="<?php echo $this->helper->createUrl() ?>"><img src="<?php echo $this->helper->createUrl('public/site/images/logo.png') ?>" alt=""></a>
+      <a href="<?php echo $this->helper->createUrl() ?>"><img src="<?php echo $this->helper->createUrlImg('public/site/images/logo.png') ?>" alt=""></a>
     </div>
     <div class="humberger__menu__cart">
       <ul>
@@ -126,7 +143,7 @@
       <div class="row">
         <div class="col-lg-3">
           <div class="header__logo">
-            <a href="<?php echo $this->helper->createUrl() ?>"><img src="<?php echo $this->helper->createUrl('public/site/images/logo.png') ?>" alt=""></a>
+            <a href="<?php echo $this->helper->createUrl() ?>"><img src="<?php echo $this->helper->createUrlImg('public/site/images/logo.png') ?>" alt=""></a>
           </div>
         </div>
         <div class="col-lg-6">
@@ -176,7 +193,7 @@
           <div class="hero__search">
             <div class="hero__search__form">
               <form action="<?php echo $this->helper->createUrl('search') ?>">
-                <input type="text" placeholder="Nhập từ khoá">
+                <input name="keyword" type="text" placeholder="Nhập từ khoá">
                 <button type="submit" class="site-btn">Tìm</button>
               </form>
             </div>

@@ -57,31 +57,51 @@ $app->router->post('/admin/order/:id/update', 'OrderController@update');
 //  =========================== Admin ===========================
 
 //  =========================== Site  ===========================
+
+// Home
 $app->router->get('/', 'HomeController@index');
 $app->router->get('/index-ajax', 'HomeController@getListByAjax');
-$app->router->get('/products', 'HomeController@index');
+$app->router->get('/about', 'HomeController@about');
+$app->router->get('/contact', 'HomeController@contact');
+
+// Product
+$app->router->get('/products', 'HomeController@getAllProduct');
+$app->router->get('/search', 'HomeController@searchProduct');
 $app->router->get('/product/:slug', 'HomeController@detailProduct');
 $app->router->get('/category/:slug', 'HomeController@detailCategory');
-$app->router->get('/about', 'HomeController@about');
+
+// Auth
 $app->router->get('/login', 'AuthController@login');
 $app->router->get('/register', 'AuthController@register');
 $app->router->post('/login', 'AuthController@handleLogin');
 $app->router->post('/register', 'AuthController@handleRegister');
 $app->router->get('/register-success', 'AuthController@registerSuccess');
 $app->router->post('/logout', 'AuthController@handleLogout');
+
+// User
 $app->router->get('/profile', 'HomeController@profile');
+$app->router->post('/profile', 'HomeController@updateProfile');
+$app->router->post('/profile/:id/change-password', 'HomeController@updatePassword');
+$app->router->post('/profile/:id/change-avatar', 'HomeController@updateAvatar');
+
+// Cart
 $app->router->get('/cart', 'HomeController@cart');
 $app->router->post('/cart/add', 'CartController@addCart');
 $app->router->post('/cart/update', 'CartController@updateCart');
 $app->router->post('/cart/remove', 'CartController@removeCart');
+
+// Checkout
 $app->router->get('/checkout', 'HomeController@checkout');
 $app->router->post('/checkout', 'HomeController@handleCheckout');
-$app->router->get('/order-success', 'HomeController@orderSuccess');
+
+// Address
 $app->router->post('/address/district', 'AddressController@getListDistricts');
 $app->router->post('/address/ward', 'AddressController@getListWards');
 
+// Order
 $app->router->get('/order', 'HomeController@orderList');
 $app->router->get('/order/:id', 'HomeController@orderDetail');
+$app->router->get('/order-success', 'HomeController@orderSuccess');
 
 // Not found
 $app->router->setNotFound('ErrorController@notFound');

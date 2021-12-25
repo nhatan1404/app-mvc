@@ -17,7 +17,7 @@ class Order extends Model
 
   public function getAll(): array
   {
-    $query = 'select * from orders';
+    $query = 'select * from orders order by id desc';
     try {
       return $this->selectQuery($query);
     } catch (\PDOException $ex) {
@@ -29,7 +29,7 @@ class Order extends Model
     $total = $this->getCount();
     $start = Pagination::getStart($total, $page);
     $limit = NUMBER_PER_PAGE;
-    return $this->selectQuery("select * from orders limit $start, $limit");
+    return $this->selectQuery("select * from orders order by id desc limit $start, $limit");
   }
 
   public function getLastestOrder($userId)
