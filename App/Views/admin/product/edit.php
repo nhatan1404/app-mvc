@@ -49,7 +49,8 @@
           <div class="form-group">
             <label for="inputImages" class="col-form-label">Ảnh: </label>
             <input class="form-control" id="inputImage" name="images" oninput="imgReview.src=window.URL.createObjectURL(this.files[0])" type="file">
-            <img id="imgReview" src="<?php echo $this->helper->createUrlImg($this->product->images) ?>" class="mt-3 img-fluid img-thumbnail" style="max-width: 200px" />
+            <?php $this->displayError('images') ?>
+            <img class='d-block' id="imgReview" src="<?php echo $this->helper->createUrlImg($this->product->images) ?>" class="mt-3 img-fluid img-thumbnail" style="max-width: 200px" />
           </div>
 
           <div class="form-group">

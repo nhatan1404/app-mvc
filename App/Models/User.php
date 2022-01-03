@@ -35,7 +35,7 @@ class User extends Model
 
   public function findById($id)
   {
-    $query = 'select * from users left join address on users.address_id = address.id where users.id = ?';
+    $query = 'select users.*, address.id as address_id, address, province_id, district_id, ward_id  from users left join address on users.address_id = address.id where users.id = ?';
     try {
       $data = $this->selectQuery($query, [$id]);
       return count($data) != 0 ? $data[0] : null;
@@ -83,8 +83,6 @@ class User extends Model
     try {
       return $this->updateQuery($query, $user);
     } catch (PDOException $ex) {
-      var_dump($ex);
-      die();
       return -1;
     }
   }

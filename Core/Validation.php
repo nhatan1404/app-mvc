@@ -155,6 +155,18 @@ class Validation
     return $this;
   }
 
+  public function image(): self
+  {
+    if ($this->type == self::TYPE_FILE) {
+      $fileExt = strtolower(end(explode('.', $this->file['name'])));
+      $expensions = array("jpeg", "jpg", "png", "gif", "webp");
+      if (in_array($fileExt, $expensions) === false) {
+        $this->errors[$this->name] = $msg ?? 'Định dạng ảnh không cho phép. Ảnh nên là file .png, .jpg hay .jpeg';
+      }
+    }
+    return $this;
+  }
+
   public function isValid(): bool
   {
     return empty($this->errors);

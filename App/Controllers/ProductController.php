@@ -66,7 +66,7 @@ class ProductController extends Controller
     $this->validator->name('status')->label('Trạng thái')->value($status)->string()->required();
     $this->validator->name('price')->label('Giá')->value($price)->number()->min(500)->required();
     $this->validator->name('discount')->label('Chiết khấu')->value($discount)->default(0)->number()->min(0)->max(100)->required();
-    $this->validator->name('images')->label('Ảnh')->file($images)->required();
+    $this->validator->name('images')->label('Ảnh')->file($images)->image()->required();
     $this->validator->name('category_id')->label('Danh mục')->value($category_id)->number()->required();
 
     if (!$this->validator->isValid()) {
@@ -153,8 +153,11 @@ class ProductController extends Controller
     $this->validator->name('status')->label('Trạng thái')->value($status)->string()->required();
     $this->validator->name('price')->label('Giá')->value($price)->number()->min(500)->required();
     $this->validator->name('discount')->label('Chiết khấu')->value($discount)->default(0)->number()->min(0)->max(100)->required();
-    //$this->validator->name('images')->label('Ảnh')->file($images)->required();
     $this->validator->name('category_id')->label('Danh mục')->value($category_id)->number()->required();
+
+    if ($images != null) {
+      $this->validator->name('images')->label('Ảnh')->file($images)->image()->required();
+    }
 
     if (!$this->validator->isValid()) {
       $this->session->set($this->view->validation(), $this->validator->getErrors());

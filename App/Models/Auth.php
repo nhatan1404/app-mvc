@@ -8,7 +8,7 @@ class Auth extends Model
 {
   public function findDetailLogin($email)
   {
-    $query = 'select id, email, password from users where email = ?';
+    $query = "select id, email, password from users where email = ? and status = 'active'";
     try {
       $data = $this->selectQuery($query, [$email]);
       return count($data) != 0 ? $data[0] : null;

@@ -62,7 +62,6 @@ class UserController extends Controller
     $this->validator->name('repassword')->value($repassword)->label('Mật khẩu xác nhận')->string()->equal($password)->minLen(8)->required();
     $this->validator->name('email')->value($email)->label('Email')->string()->email()->required();
     $this->validator->name('telephone')->value($telephone)->label('Số điện thoại')->string()->phone()->required();
-    // $this->validator->name('avatar')->file($avatar)->label('Ảnh đại diện')->required();
     $this->validator->name('role')->value($role)->label('Chức vụ')->string()->required();
     $this->validator->name('status')->value($status)->label('Trạng thái')->string()->required();
     $this->validator->name('address')->value($address)->label('Địa chỉ')->string()->required();
@@ -72,8 +71,12 @@ class UserController extends Controller
 
     $user = $this->modelUser->findByEmail($email);
 
+    if ($avatar != null) {
+      $this->validator->name('avatar')->label('Ảnh đại diện')->file($avatar)->image()->required();
+    }
+
     if ($user != null) {
-     $this->validator->setError('email', 'Emal không có sẵn');
+      $this->validator->setError('email', 'Emal không có sẵn');
     }
 
     if (!$this->validator->isValid()) {
@@ -132,7 +135,7 @@ class UserController extends Controller
     if ($user == null) {
       $this->view->notFound('Tài khoản không tồn tại');
     }
-
+    
     $this->view->user = $user;
     $this->view->title = 'Sửa Tài Khoản';
     $this->view->render('admin.user.edit');
@@ -162,7 +165,6 @@ class UserController extends Controller
     $this->validator->name('lastname')->value($lastname)->label('Họ')->string()->minLen(1)->required();
     $this->validator->name('email')->value($email)->label('Email')->string()->email()->required();
     $this->validator->name('telephone')->value($telephone)->label('Số điện thoại')->string()->phone()->required();
-    //$this->validator->name('avatar')->file($avatar)->label('Ảnh đại diện')->required();
     $this->validator->name('role')->value($role)->label('Chức vụ')->string()->required();
     $this->validator->name('status')->value($status)->label('Trạng thái')->string()->required();
     $this->validator->name('address')->value($address)->label('Địa chỉ')->string()->required();
@@ -172,8 +174,12 @@ class UserController extends Controller
 
     $checkUser = $this->modelUser->findByEmail($email);
 
+    if ($avatar != null) {
+      $this->validator->name('avatar')->label('Ảnh đại diện')->file($avatar)->image()->required();
+    }
+
     if ($user != null && $user->id != $checkUser->id) {
-     $this->validator->setError('email', 'Emal không có sẵn');
+      $this->validator->setError('email', 'Emal không có sẵn');
     }
 
     if (!$this->validator->isValid()) {

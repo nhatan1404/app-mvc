@@ -175,7 +175,7 @@ class HomeController extends Controller
     $checkUser = $this->modelUser->findByEmail($email);
 
     if ($user != null && $user->id != $checkUser->id) {
-     $this->validator->setError('email', 'Emal không có sẵn');
+      $this->validator->setError('email', 'Emal không có sẵn');
     }
 
     if (!$this->validator->isValid()) {
@@ -243,10 +243,10 @@ class HomeController extends Controller
 
     $avatar = $this->body->file('avatar');
 
-    $this->validator->name('avatar')->file($avatar)->label('Ảnh đại diện')->required();
+    $this->validator->name('avatar')->file($avatar)->label('Ảnh đại diện')->image()->required();
 
     if (!$this->validator->isValid()) {
-      $this->view->createFlashMsg('error', 'Chưa chọn ảnh', FlashMessage::FLASH_ERROR);
+      $this->view->createFlashMsg('error', $this->validator->getError('avatar'), FlashMessage::FLASH_ERROR);
       $this->view->redirect('/profile');
     }
 

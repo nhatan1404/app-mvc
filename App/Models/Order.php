@@ -81,8 +81,6 @@ class Order extends Model
     try {
       return $this->updateQuery($query, $data);
     } catch (\PDOException $ex) {
-      var_dump($ex);
-      die();
       return -1;
     }
   }

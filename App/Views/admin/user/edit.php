@@ -4,7 +4,7 @@
       <?php (($this->issetFlash('success') ? $this->flashMsg('success') : $this->flashMsg('error'))) ?>
     </div>
   </div>
-<?php }  ?>
+<?php } ?>
 <div class="row">
   <div class="col-lg-10 mx-auto">
     <div class="card">
@@ -50,9 +50,9 @@
 
           <div class="form-group">
             <label for="inputAvatar" class="col-form-label">Ảnh đại diện: </label>
-            <input id="inputAvatar" class="form-control" type="file" oninput="imgReview.src=window.URL.createObjectURL(this.files[0])" name="avatar"  />
+            <input id="inputAvatar" class="form-control" type="file" oninput="imgReview.src=window.URL.createObjectURL(this.files[0])" name="avatar" />
             <?php $this->displayError('avatar') ?>
-            <img id="imgReview" style="margin-top:15px;max-height:100px;" src="<?php echo $this->helper->createUrlImg($this->user->avatar) ?>">
+            <img class='d-block' id="imgReview" style="margin-top:15px;max-height:100px;" src="<?php echo $this->helper->createUrlImg($this->user->avatar) ?>">
           </div>
 
           <div class="row">

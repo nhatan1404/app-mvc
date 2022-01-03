@@ -96,7 +96,7 @@ class CartController extends Controller
       if ($rowCount > 0) {
         $this->view->json([
           'message' => 'Thêm vào giỏ hàng thành công',
-          'count' => $cart->count,
+          'count' => 1,
           'isUpdate' => true
         ], 200);
       } else {
